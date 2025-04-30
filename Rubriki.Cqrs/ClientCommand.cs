@@ -22,7 +22,7 @@ public class ClientCommand(Repository.ApplicationDbContext db)
         if (contestant == null || judge == null || criteria == null)
             throw new ArgumentException("Invalid contestant, judge or criteria ID");
         var existingScore = await db.Scores
-            .FirstOrDefaultAsync(x => x.Contestant!.Id == contestantId && x.Judge!.Id == judgeId && x.Criteria!.Id == criteriaId);
+            .FirstOrDefaultAsync(x => x.Contestant!.Id == contestantId && x.Criteria!.Id == criteriaId);
         if (existingScore != null)
         {
             existingScore.Level = level;

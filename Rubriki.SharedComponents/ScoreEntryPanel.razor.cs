@@ -8,7 +8,20 @@ public partial class ScoreEntryPanel
     public class Model(Cqrs.ClientQuery query, Cqrs.ClientCommand command) : IValidatableObject
     {
         public List<Judge> Judges { get; set; } = [];
-        public string SelectedJudgeId { get; set; } = string.Empty;
+        
+        private string selectedJudgeId = string.Empty;
+        public string SelectedJudgeId
+        {
+            get => selectedJudgeId;
+            set
+            {
+                if (value != selectedJudgeId)
+                {
+                    selectedJudgeId = value;
+                    ChangeMade();
+                }
+            }
+        }
 
         public List<Category> Categories { get; set; } = [];
 
@@ -21,6 +34,7 @@ public partial class ScoreEntryPanel
                 if (value != selectedCategoryId)
                 {
                     selectedCategoryId = value;
+                    ChangeMade();
                     LoadCriteria().ConfigureAwait(false);
                     LoadContestant().ConfigureAwait(false);
                 }
@@ -38,6 +52,7 @@ public partial class ScoreEntryPanel
                 if (value != selectedContestantId)
                 {
                     selectedContestantId = value;
+                    ChangeMade();
                     LoadContestant().ConfigureAwait(false);
                 }
             }
@@ -62,9 +77,6 @@ public partial class ScoreEntryPanel
 
         public async Task LoadCriteria()
         {
-            SuccessMessage = string.Empty;
-            ErrorMessage = string.Empty;
-
             if (string.IsNullOrEmpty(selectedCategoryId))
             {
                 CriteriaEntries = [];
@@ -80,6 +92,7 @@ public partial class ScoreEntryPanel
                     {
                         Id = x.Id,
                         Name = x.Name,
+                        OnChange = ChangeMade
                     })
                 ];
             }
@@ -89,9 +102,6 @@ public partial class ScoreEntryPanel
 
         public async Task LoadContestant()
         {
-            SuccessMessage = string.Empty;
-            ErrorMessage = string.Empty;
-
             if (int.TryParse(selectedContestantId, out var contestantId) && int.TryParse(selectedCategoryId, out var categoryId))
             {
                 currentScores = await query.GetContestantCategoryScores(contestantId, categoryId);
@@ -152,6 +162,12 @@ public partial class ScoreEntryPanel
             }
         }
 
+        private void ChangeMade()
+        {
+            SuccessMessage = string.Empty;
+            ErrorMessage = string.Empty;
+        }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (!int.TryParse(SelectedJudgeId, out _))
@@ -177,10 +193,38 @@ public partial class ScoreEntryPanel
 
         public class CriteriaEntry
         {
+            public Action? OnChange { get; set; }
+
             public int Id { get; set; }
             public string Name { get; set; } = string.Empty;
-            public string Level { get; set; } = string.Empty;
-            public string Comment { get; set; } = string.Empty;
+
+            private string comment = string.Empty;
+            public string Comment
+            {
+                get => comment;
+                set
+                {
+                    if (value != comment)
+                    {
+                        comment = value;
+                        OnChange?.Invoke();
+                    }
+                }
+            }
+
+            private string level = string.Empty;
+            public string Level
+            {
+                get => level;
+                set
+                {
+                    if (value != level)
+                    {
+                        level = value;
+                        OnChange?.Invoke();
+                    }
+                }
+            }
         }
     }
 }

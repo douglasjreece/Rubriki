@@ -5,6 +5,14 @@ namespace Rubriki.Cqrs;
 
 public class AppQuery(Repository.ApplicationDbContext db)
 {
+    public async Task<int> GetScoredContestantCount()
+    {
+        return await db.Scores
+            .Select(x => x.Contestant!.Id)
+            .Distinct()
+            .CountAsync();
+    }
+
     public async Task<List<ScoreEntry>> GetScores()
     {
         return await db.Scores

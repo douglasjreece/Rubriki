@@ -20,6 +20,7 @@ public static class IServiceCollectionExtentions
         services.AddScoped<ClientCommand>();
         services.AddScoped<ClientQuery>();
         services.AddScoped<AppQuery>();
+        services.AddScoped<AppCommand>();
         return services;
     }
 }

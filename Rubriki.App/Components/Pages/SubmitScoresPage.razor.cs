@@ -1,15 +1,29 @@
-﻿using Rubriki.UseCases;
+﻿using Rubriki.Cqrs;
+using Rubriki.UseCases;
 
 namespace Rubriki.App.Components.Pages;
 
 public partial class SubmitScoresPage
 {
-    public class Model(SubmitScoresUseCase useCase)
+    public class Model(AppQuery query, SubmitScoresUseCase useCase)
     {
+        public int? ScoresToSubmit { get; private set; }
 
         public string? SuccessMessage { get; private set; }
         public string? ErrorMessage { get; private set; }
         public bool IsWorking { get; private set; } = false;
+
+        public async Task Load()
+        {
+            try
+            {
+                ScoresToSubmit = await query.GetScoredContestantCount();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Error loading scores: {ex.Message}";
+            }
+        }
 
         public async Task Execute()
         {
@@ -21,6 +35,7 @@ public partial class SubmitScoresPage
             {
                 await useCase.Invoke();
                 SuccessMessage = "Scores submitted successfully.";
+                ScoresToSubmit = 0;
             }
             catch (Exception ex)
             {

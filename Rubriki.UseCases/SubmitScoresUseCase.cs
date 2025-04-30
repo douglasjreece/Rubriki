@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 
 namespace Rubriki.UseCases;
 
-public class SubmitScoresUseCase(AppQuery query, AppUseCaseOptions options)
+public class SubmitScoresUseCase(AppQuery query, AppCommand command, AppUseCaseOptions options)
 {
     public async Task Invoke()
     {
@@ -32,6 +32,8 @@ public class SubmitScoresUseCase(AppQuery query, AppUseCaseOptions options)
                 throw new Exception($"Failed to submit score for contestant {score.Contestant.Id} to {url}.");
             }
         }
+
+        await command.ClearScores();
     }
 
 }

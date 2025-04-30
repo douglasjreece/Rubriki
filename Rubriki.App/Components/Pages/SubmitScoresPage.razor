@@ -3,7 +3,21 @@
 
 <h3>Submit Scores</h3>
 
-<button class="btn btn-primary" @onclick="ClickedEvent">Submit Scores Now</button>
+<div>
+<label>Scores to submit:</label>
+    @if (model.ScoresToSubmit is null)
+    {
+        <Rubriki.SharedComponents.ActivityIndicator />
+    }
+    else
+    {
+        <span class="ms-2"><b>@model.ScoresToSubmit</b></span>
+    }
+</div>
+
+<div class="mt-3">
+    <button class="btn btn-primary" @onclick="ClickedEvent">Submit Scores Now</button>
+</div>
 
 <div class="mt-3">
     <Rubriki.SharedComponents.ActivityIndicator Visible="@model.IsWorking"/>
@@ -12,6 +26,11 @@
 </div>
 
 @code {
+    protected override async Task OnInitializedAsync()
+    {
+        await model.Load();
+    }
+
     private async Task ClickedEvent()
     {
         await model.Execute();
