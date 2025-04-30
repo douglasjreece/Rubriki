@@ -1,0 +1,45 @@
+﻿@inject Model model;
+
+@if (model.Contestant is not null)
+{
+    <h4>@model.Contestant.Name</h4>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Category</th>
+            <th>Criteria</th>
+            <th>Score</th>
+            <th>Comment</th>
+            <th>Judge</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in model.CriteriaScores)
+        {
+            <tr>
+                <td>@entry.Criteria.Category.Name</td>
+                <td>@entry.Criteria.Name</td>
+                <td>@entry.Level.Score - @entry.Level.Description</td>
+                <td>@entry.Comment</td>
+                <td>@entry.Judge.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (model.Contestant is not null)
+{
+    <a href="/score-entry/@model.Contestant!.Id">Adjust Score</a>
+}
+
+@code {
+    [Parameter]
+    public string? ContestantId { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await model.Get(int.Parse(ContestantId!));
+    }
+}

@@ -65,13 +65,13 @@ public partial class ScoreEntryPanel
             SuccessMessage = string.Empty;
             ErrorMessage = string.Empty;
 
-            if (string.IsNullOrEmpty(SelectedCategoryId))
+            if (string.IsNullOrEmpty(selectedCategoryId))
             {
                 CriteriaEntries = [];
                 return;
             }
 
-            if (int.TryParse(SelectedCategoryId, out var categoryId))
+            if (int.TryParse(selectedCategoryId, out var categoryId))
             {
                 var criteria = await query.GetCriteria(categoryId);
                 CriteriaEntries = 
@@ -92,7 +92,7 @@ public partial class ScoreEntryPanel
             SuccessMessage = string.Empty;
             ErrorMessage = string.Empty;
 
-            if (int.TryParse(SelectedContestantId, out var contestantId) && int.TryParse(SelectedCategoryId, out var categoryId))
+            if (int.TryParse(selectedContestantId, out var contestantId) && int.TryParse(selectedCategoryId, out var categoryId))
             {
                 currentScores = await query.GetContestantCategoryScores(contestantId, categoryId);
             }
@@ -115,7 +115,7 @@ public partial class ScoreEntryPanel
                 {
                     foreach (var entry in CriteriaEntries)
                     {
-                        if (int.TryParse(entry.Score, out var score))
+                        if (int.TryParse(entry.Level, out var score))
                         {
                             await command.SetScore(contestantId, judgeId, entry.Id, score, entry.Comment);
                         }
@@ -133,7 +133,7 @@ public partial class ScoreEntryPanel
         {
             foreach (var entry in CriteriaEntries)
             {
-                entry.Score = string.Empty;
+                entry.Level = string.Empty;
                 entry.Comment = string.Empty;
             }
         }
@@ -146,7 +146,7 @@ public partial class ScoreEntryPanel
                 var entry = CriteriaEntries.FirstOrDefault(x => x.Id == currentScore.Criteria.Id);
                 if (entry != null)
                 {
-                    entry.Score = $"{currentScore.Level.Score} - {currentScore.Level.Description}";
+                    entry.Level = currentScore.Level.Id.ToString();
                     entry.Comment = currentScore.Comment;
                 }
             }
@@ -169,7 +169,7 @@ public partial class ScoreEntryPanel
                 yield return new ValidationResult("Please select a contestant.");
             }
 
-            if (CriteriaEntries.Any(x => !int.TryParse(x.Score, out _)))
+            if (CriteriaEntries.Any(x => !int.TryParse(x.Level, out _)))
             {
                 yield return new ValidationResult("Please enter scores for all criteria.");
             }
@@ -179,7 +179,7 @@ public partial class ScoreEntryPanel
         {
             public int Id { get; set; }
             public string Name { get; set; } = string.Empty;
-            public string Score { get; set; } = string.Empty;
+            public string Level { get; set; } = string.Empty;
             public string Comment { get; set; } = string.Empty;
         }
     }

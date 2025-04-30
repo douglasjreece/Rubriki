@@ -38,7 +38,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <InputRadioGroup Name="@groupName" @bind-Value="@thisCriteria.Score">
+                        <InputRadioGroup Name="@groupName" @bind-Value="@thisCriteria.Level">
                             @foreach (var level in model.Levels)
                             {
                                 <div style="float:left; width:200px"><label class="mt-10"><InputRadio Value="@level.Score.ToString()" /> @level.Description</label></div>
@@ -67,9 +67,17 @@
 
 
 @code {
+
+    [Parameter]
+    public string? ContestantId { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await model.Load();
+        if (ContestantId != null)
+        {
+            model.SelectedContestantId = ContestantId;
+        }
     }
 
     private async Task CategoryChanged(ChangeEventArgs e)

@@ -91,4 +91,14 @@ public class ClientQuery(Repository.ApplicationDbContext db)
             .Select(x => new Contestant(x.Id, x.Name))
             .FirstAsync();
     }
+
+    public async Task<List<ContestantTotalScore>> GetResults()
+    {
+        return await db.Scores
+            .Include(x => x.Contestant)
+            .Include(x => x.Level)
+            .GroupBy(x => x.Contestant)
+            .Select(x => new ContestantTotalScore(new(x.Key!.Id, x.Key.Name), x.Sum(y => y.Level!.Score)))
+            .ToListAsync();
+    }
 }

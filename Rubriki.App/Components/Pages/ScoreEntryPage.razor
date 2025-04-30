@@ -1,12 +1,14 @@
-﻿@using Rubriki.SharedComponents
-@page "/score-entry"
+﻿@page "/score-entry"
+@page "/score-entry/{contestantId}"
+@using Rubriki.SharedComponents
 
 <h3>Score Entry</h3>
 
 <div style="max-width:1000px">
-    <ScoreEntryPanel />
+    <ScoreEntryPanel ContestantId="@ContestantId"/>
 </div>
 
 @code {
-
+    [Parameter]
+    public string? ContestantId { get; set; }
 }

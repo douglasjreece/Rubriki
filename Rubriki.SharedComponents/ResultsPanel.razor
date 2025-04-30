@@ -1,0 +1,28 @@
+﻿@inject Model model
+
+<div class="col-3">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Contestant</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in model.ResultsList)
+            {
+                <tr>
+                    <td><a href="/contestant/@result.Contestant.Id">@result.Contestant.Name</a></td>
+                    <td>@result.Score</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await model.Get();
+    }
+}
