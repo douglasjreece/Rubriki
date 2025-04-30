@@ -13,18 +13,19 @@ public class ClientCommand(Repository.ApplicationDbContext db)
     }
 #endif
 
-    public async Task SetScore(int contestantId, int judgeId, int criteriaId, int score, string comment)
+    public async Task SetScore(int contestantId, int judgeId, int criteriaId, int levelId, string comment)
     {
         var contestant = await db.Contestants.FindAsync(contestantId);
         var judge = await db.Judges.FindAsync(judgeId);
         var criteria = await db.Criteria.FindAsync(criteriaId);
+        var level = await db.Levels.FindAsync(levelId);
         if (contestant == null || judge == null || criteria == null)
             throw new ArgumentException("Invalid contestant, judge or criteria ID");
         var existingScore = await db.Scores
             .FirstOrDefaultAsync(x => x.Contestant!.Id == contestantId && x.Judge!.Id == judgeId && x.Criteria!.Id == criteriaId);
         if (existingScore != null)
         {
-            existingScore.Value = score;
+            existingScore.Level = level;
             existingScore.Comment = comment;
         }
         else
@@ -34,7 +35,7 @@ public class ClientCommand(Repository.ApplicationDbContext db)
                 Contestant = contestant, 
                 Judge = judge, 
                 Criteria = criteria, 
-                Value = score,
+                Level = level,
                 Comment = comment
             };
             db.Scores.Add(newScore);

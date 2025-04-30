@@ -51,6 +51,7 @@ public class ClientQuery(Repository.ApplicationDbContext db)
         return await db.Scores
             .Include(x => x.Criteria)
             .Include(x => x.Judge)
+            .Include(x => x.Level)
             .Include(x => x.Criteria!.Category)
             .Where(x => x.Contestant!.Id == contestantId && x.Criteria!.Category!.Id == categoryId)
             .Select(x => new CriteriaScore(
@@ -59,7 +60,7 @@ public class ClientQuery(Repository.ApplicationDbContext db)
                     x.Criteria!.Id, 
                     x.Criteria.Name),
                 new Judge(x.Judge!.Id, x.Judge.Name),
-                x.Value,
+                new Level(x.Level!.Id, x.Level.Description, x.Level.Score),
                 x.Comment))
             .ToListAsync();
     }
@@ -69,6 +70,7 @@ public class ClientQuery(Repository.ApplicationDbContext db)
         return await db.Scores
             .Include(x => x.Criteria)
             .Include(x => x.Judge)
+            .Include(x => x.Level)
             .Include(x => x.Criteria!.Category)
             .Where(x => x.Contestant!.Id == contestantId)
             .Select(x => new CriteriaScore(
@@ -77,7 +79,7 @@ public class ClientQuery(Repository.ApplicationDbContext db)
                     x.Criteria!.Id,
                     x.Criteria.Name),
                 new Judge(x.Judge!.Id, x.Judge.Name),
-                x.Value,
+                new Level(x.Level!.Id, x.Level.Description, x.Level.Score),
                 x.Comment))
             .ToListAsync();
     }

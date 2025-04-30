@@ -18,8 +18,7 @@ public class Score
     public int JudgeId { get; set; }
 
     [Required]
-    [Range(1, 4)] // Assuming a 1-4 scale
-    public int Value { get; set; }
+    public int LevelId { get; set; }
 
     [Required]
     public string Comment { get; set; } = string.Empty;
@@ -33,4 +32,7 @@ public class Score
 
     [ForeignKey("JudgeId")]
     public Judge? Judge { get; set; }
+
+    [ForeignKey("LevelId")]
+    public Level? Level { get; set; }
 }

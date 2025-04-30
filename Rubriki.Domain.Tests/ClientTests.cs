@@ -34,7 +34,8 @@ namespace Rubriki.Domain.Tests
                     { "Category2", [ "Criteria3" ] }
                 },
                 ContestantNames = ["Contestant1"],
-                JudgeNames = ["Judge1", "Judge2"]
+                JudgeNames = ["Judge1", "Judge2"],
+                Levels = ["Level1", "Level2", "Level3"]
             };
 
             // Act
@@ -79,7 +80,8 @@ namespace Rubriki.Domain.Tests
                     { "Category2", [ "Criteria3" ] }
                 },
                 ContestantNames = ["Contestant1"],
-                JudgeNames = ["Judge1", "Judge2"]
+                JudgeNames = ["Judge1", "Judge2"],
+                Levels = ["Level1", "Level2", "Level3"]
             };
 
             // Act

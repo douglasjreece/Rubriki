@@ -146,7 +146,7 @@ public partial class ScoreEntryPanel
                 var entry = CriteriaEntries.FirstOrDefault(x => x.Id == currentScore.Criteria.Id);
                 if (entry != null)
                 {
-                    entry.Score = currentScore.Score.ToString();
+                    entry.Score = $"{currentScore.Level.Score} - {currentScore.Level.Description}";
                     entry.Comment = currentScore.Comment;
                 }
             }

@@ -42,6 +42,12 @@ public class ApplicationDbContext : DbContext
             .HasForeignKey(r => r.JudgeId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<Score>()
+            .HasOne(r => r.Level)
+            .WithMany(j => j.Results)
+            .HasForeignKey(r => r.LevelId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<Criteria>()
             .HasOne(c => c.Category)
             .WithMany(cat => cat.Criteria)

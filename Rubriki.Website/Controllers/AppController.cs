@@ -30,7 +30,7 @@ public class AppController(IServiceProvider provider) : ControllerBase
             return BadRequest("Score data is required");
         }
         var command = provider.GetRequiredService<Cqrs.ClientCommand>();
-        await command.SetScore(contestantId, submission.JudgeId, submission.CriteriaId, submission.Score, submission.Comment);
+        await command.SetScore(contestantId, submission.JudgeId, submission.CriteriaId, submission.LevelId, submission.Comment);
         return Ok();
     }
 }

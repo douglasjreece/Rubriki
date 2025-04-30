@@ -12,4 +12,7 @@ public class Level
 
     [Required]
     public int Score { get; set; }
+
+    // Navigation property
+    public ICollection<Score>? Results { get; set; }
 }

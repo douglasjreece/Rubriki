@@ -1,3 +1,3 @@
 ﻿namespace Rubriki.Dto;
 
-public record CriteriaScore(Criteria Criteria, Judge Judge, int Score, string Comment);
+public record CriteriaScore(Criteria Criteria, Judge Judge, Level Level, string Comment);

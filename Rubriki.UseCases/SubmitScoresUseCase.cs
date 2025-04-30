@@ -18,7 +18,7 @@ public class SubmitScoresUseCase(AppQuery query, AppUseCaseOptions options)
                 score.Contestant.Id,
                 score.Judge.Id,
                 score.Criteria.Id,
-                score.Score,
+                score.Level.Id,
                 score.Comment
                 );
             var url = new UriBuilder(options.ApiEndpoint) { Path = $"/api/app/submit-score/{score.Contestant.Id}" }.ToString();
