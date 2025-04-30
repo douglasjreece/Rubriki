@@ -1,0 +1,9 @@
+﻿@if (Visible)
+{
+    <div class="spinner-border"></div>
+}
+
+@code {
+    [Parameter]
+    public bool Visible { get; set; } = true;
+}

@@ -1,0 +1,186 @@
+﻿using Rubriki.Dto;
+using System.ComponentModel.DataAnnotations;
+
+namespace Rubriki.SharedComponents;
+
+public partial class ScoreEntryPanel
+{
+    public class Model(Cqrs.ClientQuery query, Cqrs.ClientCommand command) : IValidatableObject
+    {
+        public List<Judge> Judges { get; set; } = [];
+        public string SelectedJudgeId { get; set; } = string.Empty;
+
+        public List<Category> Categories { get; set; } = [];
+
+        string selectedCategoryId = string.Empty;
+        public string SelectedCategoryId 
+        { 
+            get => selectedCategoryId; 
+            set
+            {
+                if (value != selectedCategoryId)
+                {
+                    selectedCategoryId = value;
+                    LoadCriteria().ConfigureAwait(false);
+                    LoadContestant().ConfigureAwait(false);
+                }
+            }
+        }
+
+        public List<Contestant> Contestants { get; set; } = [];
+
+        string selectedContestantId = string.Empty;
+        public string SelectedContestantId
+        {
+            get => selectedContestantId;
+            set
+            {
+                if (value != selectedContestantId)
+                {
+                    selectedContestantId = value;
+                    LoadContestant().ConfigureAwait(false);
+                }
+            }
+        }
+
+        public List<Level> Levels { get; set; } = [];
+
+        public List<CriteriaEntry> CriteriaEntries { get; set; } = [];
+
+        public string SuccessMessage { get; set; } = string.Empty;
+        public string ErrorMessage { get; set; } = string.Empty;
+
+        private List<CriteriaScore> currentScores = [];
+
+        public async Task Load()
+        {
+            Judges = await query.GetJudges();
+            Categories = await query.GetCategories();
+            Contestants = await query.GetContestants();
+            Levels = await query.GetLevels();
+        }
+
+        public async Task LoadCriteria()
+        {
+            SuccessMessage = string.Empty;
+            ErrorMessage = string.Empty;
+
+            if (string.IsNullOrEmpty(SelectedCategoryId))
+            {
+                CriteriaEntries = [];
+                return;
+            }
+
+            if (int.TryParse(SelectedCategoryId, out var categoryId))
+            {
+                var criteria = await query.GetCriteria(categoryId);
+                CriteriaEntries = 
+                [
+                    .. criteria.Select(x => new CriteriaEntry
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                    })
+                ];
+            }
+
+            UpdateScores();
+        }
+
+        public async Task LoadContestant()
+        {
+            SuccessMessage = string.Empty;
+            ErrorMessage = string.Empty;
+
+            if (int.TryParse(SelectedContestantId, out var contestantId) && int.TryParse(SelectedCategoryId, out var categoryId))
+            {
+                currentScores = await query.GetContestantCategoryScores(contestantId, categoryId);
+            }
+            else
+            {
+                currentScores = [];
+            }
+            UpdateScores();
+        }
+
+
+        public async Task SaveScores()
+        {
+            SuccessMessage = string.Empty;
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                if (int.TryParse(SelectedContestantId, out var contestantId) && int.TryParse(SelectedJudgeId, out var judgeId))
+                {
+                    foreach (var entry in CriteriaEntries)
+                    {
+                        if (int.TryParse(entry.Score, out var score))
+                        {
+                            await command.SetScore(contestantId, judgeId, entry.Id, score, entry.Comment);
+                        }
+                    }
+                }
+                SuccessMessage = "The scores had been saved.";
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Error: {ex.Message}";
+            }
+        }
+
+        private void ClearScores()
+        {
+            foreach (var entry in CriteriaEntries)
+            {
+                entry.Score = string.Empty;
+                entry.Comment = string.Empty;
+            }
+        }
+
+        private void UpdateScores()
+        {
+            ClearScores();
+            foreach (var currentScore in currentScores)
+            {
+                var entry = CriteriaEntries.FirstOrDefault(x => x.Id == currentScore.Criteria.Id);
+                if (entry != null)
+                {
+                    entry.Score = currentScore.Score.ToString();
+                    entry.Comment = currentScore.Comment;
+                }
+            }
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!int.TryParse(SelectedJudgeId, out _))
+            {
+                yield return new ValidationResult("Please select a judge.");
+            }
+
+            if (!int.TryParse(SelectedCategoryId, out _))
+            {
+                yield return new ValidationResult("Please select a category.");
+            }
+
+            if (!int.TryParse(SelectedContestantId, out _))
+            {
+                yield return new ValidationResult("Please select a contestant.");
+            }
+
+            if (CriteriaEntries.Any(x => !int.TryParse(x.Score, out _)))
+            {
+                yield return new ValidationResult("Please enter scores for all criteria.");
+            }
+        }
+
+        public class CriteriaEntry
+        {
+            public int Id { get; set; }
+            public string Name { get; set; } = string.Empty;
+            public string Score { get; set; } = string.Empty;
+            public string Comment { get; set; } = string.Empty;
+        }
+    }
+}

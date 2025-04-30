@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>c4594ee8-d9e6-4d79-951d-2e80b9da861c</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Rubriki.Cqrs\Rubriki.Cqrs.csproj" />
+    <ProjectReference Include="..\Rubriki.Dto\Rubriki.Dto.csproj" />
+    <ProjectReference Include="..\Rubriki.Repository\Rubriki.Repository.csproj" />
+    <ProjectReference Include="..\Rubriki.SharedComponents\Rubriki.SharedComponents.csproj" />
+    <ProjectReference Include="..\Rubriki.UseCases\Rubriki.UseCases.csproj" />
+  </ItemGroup>
+
+</Project>

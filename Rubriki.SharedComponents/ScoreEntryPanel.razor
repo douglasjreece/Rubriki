@@ -1,0 +1,84 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@inject Model model
+
+
+<EditForm Model="model" OnValidSubmit="ValidSubmitEvent">
+    <InputSelect @bind-Value="model.SelectedJudgeId" class="form-select">
+        <option value="">-- Select a judge --</option>
+        @foreach (var judge in model.Judges)
+        {
+            <option value="@judge.Id">@judge.Name</option>
+        }
+    </InputSelect>
+
+    <InputSelect @bind-Value="model.SelectedCategoryId" class="form-select mt-5" @onchange="CategoryChanged">
+        <option value="">-- Select a judging category --</option>
+        @foreach (var category in model.Categories)
+        {
+            <option value="@category.Id">@category.Name</option>
+        }
+    </InputSelect>
+
+    <InputSelect @bind-Value="model.SelectedContestantId" class="form-select mt-5">
+        <option value="">-- Select a contestant --</option>
+        @foreach (var contestant in model.Contestants)
+        {
+            <option value="@contestant.Id">@contestant.Name</option>
+        }
+    </InputSelect>
+
+    <table class="table table-bordered mt-5">
+        <tbody>
+            @foreach(var criteria in model.CriteriaEntries)
+            {
+                var thisCriteria = criteria;
+                var groupName = criteria.Name;
+                <tr>
+                    <th>@criteria.Name</th>
+                </tr>
+                <tr>
+                    <td>
+                        <InputRadioGroup Name="@groupName" @bind-Value="@thisCriteria.Score">
+                            @foreach (var level in model.Levels)
+                            {
+                                <div style="float:left; width:200px"><label class="mt-10"><InputRadio Value="@level.Score.ToString()" /> @level.Description</label></div>
+                            }
+                        </InputRadioGroup>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <InputTextArea @bind-Value="@thisCriteria.Comment" class="form-control" placeholder="Comment" />
+                    </td>
+                </tr>
+                <tr><td>&nbsp;</td></tr>
+            }
+        </tbody>
+
+    </table>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="mt-2 mb-2">
+        <button type="submit" class="btn btn-primary">Save Scores</button>
+    </div>
+</EditForm>
+<SuccessMessage Message="@model.SuccessMessage" />
+<ErrorMessage Message="@model.ErrorMessage" />
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await model.Load();
+    }
+
+    private async Task CategoryChanged(ChangeEventArgs e)
+    {
+        await model.LoadCriteria();
+    }
+
+    private async Task ValidSubmitEvent()
+    {
+        await model.SaveScores();
+    }
+}
