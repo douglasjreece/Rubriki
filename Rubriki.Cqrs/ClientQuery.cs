@@ -22,6 +22,14 @@ public class ClientQuery(Repository.ApplicationDbContext db)
             .ToListAsync();
     }
 
+    public async Task<List<Criteria>> GetCriteria()
+    {
+        return await db.Criteria
+            .Include(x => x.Category)
+            .Select(x => new Criteria(new(x.Category!.Id, x.Category.Name), x.Id, x.Name))
+            .ToListAsync();
+    }
+
     public async Task<List<Criteria>> GetCriteria(int categoryId)
     {
         return await db.Criteria

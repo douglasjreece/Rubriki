@@ -1,10 +1,11 @@
-﻿using Rubriki.UseCases;
+﻿using Rubriki.Dto;
+using Rubriki.UseCases;
 
 namespace Rubriki.Website.Components.Pages
 {
     public partial class AdminPage
     {
-        public class Model(SeedDatabaseUseCase seedDataUseCase)
+        public class Model(SeedDatabaseUseCase seedDataUseCase, SeedData seedData)
         {
             public string ErrorMessage { get; private set; } = string.Empty;
             public string SuccessMessage { get; private set; } = string.Empty;
@@ -18,7 +19,7 @@ namespace Rubriki.Website.Components.Pages
                 IsWorking = true;
                 try
                 {
-                    await seedDataUseCase.Invoke();
+                    await seedDataUseCase.Invoke(seedData);
                     SuccessMessage = "Data reset successfully.";
                 }
                 catch (Exception ex)

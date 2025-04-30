@@ -1,0 +1,19 @@
+﻿@page "/submit-scores"
+@inject Model model
+
+<h3>Submit Scores</h3>
+
+<button class="btn btn-primary" @onclick="ClickedEvent">Submit Scores Now</button>
+
+<div class="mt-3">
+    <Rubriki.SharedComponents.ActivityIndicator Visible="@model.IsWorking"/>
+    <Rubriki.SharedComponents.SuccessMessage Message="@model.SuccessMessage"/>
+    <Rubriki.SharedComponents.ErrorMessage Message="@model.ErrorMessage"/>
+</div>
+
+@code {
+    private async Task ClickedEvent()
+    {
+        await model.Execute();
+    }
+}

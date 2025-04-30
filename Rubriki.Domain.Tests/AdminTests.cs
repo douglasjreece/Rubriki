@@ -17,22 +17,22 @@ namespace Rubriki.Domain.Tests
             context.Database.OpenConnection();
             context.Database.EnsureCreated();
 
-            var command = new Cqrs.AdminCommand(context);
+            var command = new Cqrs.SetupCommand(context);
             var query = new Cqrs.ClientQuery(context);
             var seed = new Dto.SeedData
             {
-                CategoryAndCriteria = 
-                [
-                    new("Category1", ["Criteria1", "Criteria2" ]),
-                    new("Category2", [ "Criteria3" ])
-                ],
+                CategoryAndCriteria =
+                {
+                    { "Category1",["Criteria1", "Criteria2"] },
+                    { "Category2",["Criteria3"] }
+                },
                 ContestantNames = ["Contestant1" ],
                 JudgeNames = ["Judge1", "Judge2"]
             };
 
             // Act
-            await command.SeedData(seed);
-            var contestants = await query.GetContestantsAsync();
+            await command.Seed(seed);
+            var contestants = await query.GetContestants();
             var contestant = contestants.FirstOrDefault();
             var contestantId = contestant?.Id;
             var contestantName = contestant?.Name;

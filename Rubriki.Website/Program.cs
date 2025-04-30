@@ -26,17 +26,19 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
 
-        var dbFilePath = configuration.GetValue<string>("Database:FilePath");
+        var dbFilePath = configuration.GetValue<string>("Database:FilePath") ?? throw new InvalidOperationException("Database:FilePath is not set.");
+        services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite($"Data Source={dbFilePath}"));
 
-        services.AddDbContext<ApplicationDbContext>(options =>
-                                options.UseSqlite($"Data Source={dbFilePath}"));
+        services.AddControllers();
 
-        services.AddCqrs();
+        services.AddWebsiteCqrs();
         services.AddAdminUseCases();
         services.AddClientUseCases();
 
         services.AddSharedComponents();
         services.AddWebsiteModels();
+
+        services.AddSingleton(seedData);
 
         var app = builder.Build();
 
@@ -49,8 +51,9 @@ public class Program
         }
 
         app.UseHttpsRedirection();
-
+        app.UseRouting();
         app.UseAntiforgery();
+        app.MapControllers();
 
         app.MapStaticAssets();
         app.MapRazorComponents<App>()
@@ -67,4 +70,41 @@ public class Program
 
         app.Run();
     }
+
+    private static readonly Dto.SeedData seedData = new Dto.SeedData
+    {
+        CategoryAndCriteria =
+        {
+            {"Robot Design", ["Mechanical", "Programming", "Innovation" ]},
+            {"Project", ["Research", "Solution", "Presentation"]},
+            {"Core Values", [ "Inspiration", "Teamwork", "Professionalism"]},
+        },
+        ContestantNames =
+        [
+            "Astro Bots",
+            "Bot Heads",
+            "Code Commets",
+            "Galactic Gearheads",
+            "Hydro Hackers",
+            "Mech Masters",
+            "Null Terminators",
+            "Robo Rangers",
+            "Salty Circuits",
+            "Wattage Warriors",
+        ],
+        JudgeNames =
+        [
+            "Alice Anderson",
+            "Brian Bennett",
+            "Catherine Carter",
+            "Daniel Davis"
+        ],
+        Levels =
+        [
+            "Beginner",
+            "Developing",
+            "Accomplished",
+            "Exemplary"
+        ]
+    };
 }

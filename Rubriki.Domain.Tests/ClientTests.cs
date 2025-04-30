@@ -22,32 +22,32 @@ namespace Rubriki.Domain.Tests
             context.Database.OpenConnection();
             context.Database.EnsureCreated();
 
-            var adminCommand = new Cqrs.AdminCommand(context);
+            var adminCommand = new Cqrs.SetupCommand(context);
             var adminQuery = new Cqrs.AdminQuery(context);
             var clientCommand = new Cqrs.ClientCommand(context);
             var clientQuery = new Cqrs.ClientQuery(context);
             var seed = new Dto.SeedData
             {
                 CategoryAndCriteria =
-                [
-                    new("Category1", ["Criteria1", "Criteria2" ]),
-                    new("Category2", [ "Criteria3" ])
-                ],
+                {
+                    { "Category1", ["Criteria1", "Criteria2" ] },
+                    { "Category2", [ "Criteria3" ] }
+                },
                 ContestantNames = ["Contestant1"],
                 JudgeNames = ["Judge1", "Judge2"]
             };
 
             // Act
-            await adminCommand.SeedData(seed);
-            var contestants = await clientQuery.GetContestantsAsync();
+            await adminCommand.Seed(seed);
+            var contestants = await clientQuery.GetContestants();
             var contestant = contestants.First();
-            var judges = await clientQuery.GetJudgesAsync();
+            var judges = await clientQuery.GetJudges();
             var judge = judges.First();
-            var categories = await clientQuery.GetCategoriesAsync();
+            var categories = await clientQuery.GetCategories();
             var category = categories.First();
-            var criterias = await clientQuery.GetCriteriaAsync(category.Id);
-            await clientCommand.SetScore(contestant.Id, judge.Id, criterias[0].Id, 1);
-            await clientCommand.SetScore(contestant.Id, judge.Id, criterias[1].Id, 2);
+            var criterias = await clientQuery.GetCriteria(category.Id);
+            await clientCommand.SetScore(contestant.Id, judge.Id, criterias[0].Id, 1, "");
+            await clientCommand.SetScore(contestant.Id, judge.Id, criterias[1].Id, 2, "");
             var results = await adminQuery.GetResults();
             var contestantResult = results.First();
 
@@ -67,35 +67,35 @@ namespace Rubriki.Domain.Tests
             context.Database.OpenConnection();
             context.Database.EnsureCreated();
 
-            var adminCommand = new Cqrs.AdminCommand(context);
+            var adminCommand = new Cqrs.SetupCommand(context);
             var adminQuery = new Cqrs.AdminQuery(context);
             var clientCommand = new Cqrs.ClientCommand(context);
             var clientQuery = new Cqrs.ClientQuery(context);
             var seed = new Dto.SeedData
             {
                 CategoryAndCriteria =
-                [
-                    new("Category1", ["Criteria1", "Criteria2" ]),
-                    new("Category2", [ "Criteria3" ])
-                ],
+                {
+                    { "Category1", ["Criteria1", "Criteria2" ]},
+                    { "Category2", [ "Criteria3" ] }
+                },
                 ContestantNames = ["Contestant1"],
                 JudgeNames = ["Judge1", "Judge2"]
             };
 
             // Act
-            await adminCommand.SeedData(seed);
-            var contestants = await clientQuery.GetContestantsAsync();
+            await adminCommand.Seed(seed);
+            var contestants = await clientQuery.GetContestants();
             var contestant = contestants.First();
-            var judges = await clientQuery.GetJudgesAsync();
+            var judges = await clientQuery.GetJudges();
             var judge = judges.First();
-            var categories = await clientQuery.GetCategoriesAsync();
+            var categories = await clientQuery.GetCategories();
             var category = categories.First();
-            var criterias = await clientQuery.GetCriteriaAsync(category.Id);
-            await clientCommand.SetScore(contestant.Id, judge.Id, criterias[0].Id, 1);
-            await clientCommand.SetScore(contestant.Id, judge.Id, criterias[1].Id, 2);
+            var criterias = await clientQuery.GetCriteria(category.Id);
+            await clientCommand.SetScore(contestant.Id, judge.Id, criterias[0].Id, 1, "");
+            await clientCommand.SetScore(contestant.Id, judge.Id, criterias[1].Id, 2, "");
             var firstResults = await adminQuery.GetResults();
             var firstContestantResult = firstResults.First();
-            await clientCommand.SetScore(contestant.Id, judge.Id, criterias[1].Id, 3);
+            await clientCommand.SetScore(contestant.Id, judge.Id, criterias[1].Id, 3, "");
             var secondResults = await adminQuery.GetResults();
             var secondContestantResult = secondResults.First();
 

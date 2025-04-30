@@ -1,0 +1,19 @@
+﻿@page "/setup"
+@inject Model model
+
+<h3>Set Up</h3>
+
+<button class="btn btn-primary" @onclick="ClickedEvent">Initialize App Data</button>
+
+<div class="mt-3">
+    <Rubriki.SharedComponents.ActivityIndicator Visible="@model.IsWorking"/>
+    <Rubriki.SharedComponents.SuccessMessage Message="@model.SuccessMessage"/>
+    <Rubriki.SharedComponents.ErrorMessage Message="@model.ErrorMessage"/>
+</div>
+
+@code {
+    private async Task ClickedEvent()
+    {
+        await model.Execute();
+    }
+}
