@@ -15,14 +15,12 @@ public class ClientCommand(Repository.ApplicationDbContext db)
 
     public async Task SetScore(int contestantId, int judgeId, int criteriaId, int levelId, string comment)
     {
-        var contestant = await db.Contestants.FindAsync(contestantId);
-        var judge = await db.Judges.FindAsync(judgeId);
-        var criteria = await db.Criteria.FindAsync(criteriaId);
-        var level = await db.Levels.FindAsync(levelId);
-        if (contestant == null || judge == null || criteria == null)
-            throw new ArgumentException("Invalid contestant, judge or criteria ID");
-        var existingScore = await db.Scores
-            .FirstOrDefaultAsync(x => x.Contestant!.Id == contestantId && x.Criteria!.Id == criteriaId);
+        var contestant = await db.Contestants.FindAsync(contestantId) ?? throw new ArgumentException($"Contestant not found: {contestantId}.");
+        var judge = await db.Judges.FindAsync(judgeId) ?? throw new ArgumentException($"Judge not found: {judgeId}.");
+        var criteria = await db.Criteria.FindAsync(criteriaId) ?? throw new ArgumentException($"Criteria not found: {criteriaId}.");
+        var level = await db.Levels.FindAsync(levelId) ?? throw new ArgumentException($"Level not found: {levelId}.");
+
+        var existingScore = await db.Scores.FirstOrDefaultAsync(x => x.Contestant!.Id == contestantId && x.Criteria!.Id == criteriaId);
         if (existingScore != null)
         {
             existingScore.Level = level;
@@ -40,6 +38,7 @@ public class ClientCommand(Repository.ApplicationDbContext db)
             };
             db.Scores.Add(newScore);
         }
+
         await db.SaveChangesAsync();
     }
 }

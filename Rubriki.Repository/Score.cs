@@ -25,14 +25,14 @@ public class Score
 
     // Navigation properties
     [ForeignKey("ContestantId")]
-    public Contestant? Contestant { get; set; }
+    public Contestant Contestant { get; set; } = default!;
 
     [ForeignKey("CriteriaId")]
-    public Criteria? Criteria { get; set; }
+    public Criteria Criteria { get; set; } = default!;
 
     [ForeignKey("JudgeId")]
-    public Judge? Judge { get; set; }
+    public Judge Judge { get; set; } = default!;
 
     [ForeignKey("LevelId")]
-    public Level? Level { get; set; }
+    public Level Level { get; set; } = default!;
 }

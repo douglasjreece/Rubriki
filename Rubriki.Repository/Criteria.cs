@@ -15,7 +15,7 @@ public class Criteria
 
     // Navigation properties
     [ForeignKey("CategoryId")]
-    public Category? Category { get; set; }
+    public Category Category { get; set; } = default!;
 
     public ICollection<Score>? Results { get; set; }
 }
