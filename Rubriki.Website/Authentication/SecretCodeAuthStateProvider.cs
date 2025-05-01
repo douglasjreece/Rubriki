@@ -3,29 +3,43 @@ using System.Security.Claims;
 
 namespace Rubriki.Website.Authentication;
 
-public class SecretCodeAuthStateProvider : AuthenticationStateProvider
+public class SecretCodeAuthStateProvider(SecretCodeAuthStateProvider.Options options, CookieService cookieService) : AuthenticationStateProvider
 {
-    private ClaimsPrincipal _anonymous = new ClaimsPrincipal(new ClaimsIdentity());
-    private ClaimsPrincipal? _authenticated = null;
-    private readonly Options options;
-
     public class Options
     {
         public string AdminCode { get; set; } = string.Empty;
         public string JudgeCode { get; set; } = string.Empty;
     }
 
-    public SecretCodeAuthStateProvider(Options options)
+    public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        this.options = options;
-    }
-
-    public override Task<AuthenticationState> GetAuthenticationStateAsync()
-    {
-        return Task.FromResult(new AuthenticationState(_authenticated ?? _anonymous));
+        var secretCode = await cookieService.GetValue("SecretCode");
+        return MakeAuthenticationState(secretCode);
     }
 
     public async Task<bool> LoginAsync(string secretCode)
+    {
+        var state = MakeAuthenticationState(secretCode);
+        if (state.User.Claims.Any())
+        {
+            // Save the secret code in a cookie
+            await cookieService.SetValue("SecretCode", secretCode);
+            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public async Task LogoutAsync()
+    {
+        await cookieService.SetValue("SecretCode", string.Empty);
+        NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+    }
+
+    public AuthenticationState MakeAuthenticationState(string secretCode)
     {
         if (secretCode == options.JudgeCode || secretCode == options.AdminCode)
         {
@@ -37,26 +51,15 @@ public class SecretCodeAuthStateProvider : AuthenticationStateProvider
                 };
 
             var identity = new ClaimsIdentity(claims, "SecretCodeAuth");
-            _authenticated = new ClaimsPrincipal(identity);
+            var authenticated = new ClaimsPrincipal(identity);
 
-            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
-            return true;
+            return new(authenticated);
         }
-
-        return false;
+        else
+        {
+            // Create an anonymous user
+            var anonymous = new ClaimsPrincipal(new ClaimsIdentity());
+            return new(anonymous);
+        }
     }
-
-    public Task LogoutAsync()
-    {
-        _authenticated = null;
-        NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
-        return Task.CompletedTask;
-    }
-
-    public bool IsAuthenticated()
-    {
-        return _authenticated != null;
-    }
-
-    public SecretCodeAuthStateProvider Dup() => new SecretCodeAuthStateProvider(options);
 }

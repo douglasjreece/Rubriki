@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
-namespace Rubriki.Website;
+namespace Rubriki.Website.Authentication;
 
 public static class AuthenticationStateExtensions
 {
@@ -17,5 +17,10 @@ public static class AuthenticationStateExtensions
             }
         }
         return string.Empty;
+    }
+
+    public static bool IsAuthenticated(this AuthenticationState state)
+    {
+        return state.User.Identity?.IsAuthenticated == true;
     }
 }

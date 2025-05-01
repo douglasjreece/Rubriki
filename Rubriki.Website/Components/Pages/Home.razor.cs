@@ -20,5 +20,10 @@ public partial class Home
                 SecretCode = string.Empty;
             }
         }
+
+        public async Task SignOut()
+        {
+            await provider.LogoutAsync();
+        }
     }
 }

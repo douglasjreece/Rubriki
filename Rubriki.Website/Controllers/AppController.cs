@@ -27,8 +27,8 @@ public class AppController(IServiceProvider provider, SecretCodeAuthStateProvide
         [FromBody] ScoreSubmission? submission,
         [FromHeader] string secretCode)
     {
-        var signedIn = await authStateProvider.Dup().LoginAsync(secretCode);
-        if (!signedIn)
+        var authState = authStateProvider.MakeAuthenticationState(secretCode);
+        if (!authState.IsAuthenticated())
         {
             return Unauthorized("Invalid secret code");
         }

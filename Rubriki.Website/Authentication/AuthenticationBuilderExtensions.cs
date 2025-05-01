@@ -20,13 +20,14 @@ public static class AuthenticationBuilderExtensions
         var options = new SecretCodeAuthStateProvider.Options();
         getOptions(options);
         services.AddSingleton(options);
-#if true
+#if false
         var authProvider = new SecretCodeAuthStateProvider(options);
         services.AddSingleton(authProvider);
         services.AddSingleton<AuthenticationStateProvider>(authProvider);
 #else
         services.AddScoped<SecretCodeAuthStateProvider>();
         services.AddScoped<AuthenticationStateProvider, SecretCodeAuthStateProvider>();
+        services.AddTransient<CookieService>();
 #endif
         return services;
     }
