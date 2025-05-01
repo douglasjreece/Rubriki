@@ -9,6 +9,8 @@ public partial class SubmitScoresPage
     {
         public int? ScoresToSubmit { get; private set; }
 
+        public string SecretCode { get; set; } = string.Empty;
+
         public string? SuccessMessage { get; private set; }
         public string? ErrorMessage { get; private set; }
         public bool IsWorking { get; private set; } = false;
@@ -33,7 +35,7 @@ public partial class SubmitScoresPage
 
             try
             {
-                await useCase.Invoke();
+                await useCase.Invoke(SecretCode);
                 SuccessMessage = "Scores submitted successfully.";
                 ScoresToSubmit = 0;
             }

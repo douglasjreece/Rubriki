@@ -57,4 +57,6 @@ public class SecretCodeAuthStateProvider : AuthenticationStateProvider
     {
         return _authenticated != null;
     }
+
+    public SecretCodeAuthStateProvider Dup() => new SecretCodeAuthStateProvider(options);
 }

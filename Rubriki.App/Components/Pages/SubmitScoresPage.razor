@@ -16,7 +16,11 @@
 </div>
 
 <div class="mt-3">
-    <button class="btn btn-primary" @onclick="ClickedEvent">Submit Scores Now</button>
+    <div style="max-width:300px">
+        <label>Secret Code</label>
+        <InputText type="password" @bind-Value="model.SecretCode" class="form-control" placeholder="Enter the Secret Code" />
+    </div>
+    <button class="btn btn-primary mt-2" @onclick="ClickedEvent">Submit Scores Now</button>
 </div>
 
 <div class="mt-3">
