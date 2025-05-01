@@ -7,11 +7,11 @@ public class SecretCodeAuthStateProvider(ISecretCodeAuthenticationService authen
 {
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        var authenticatedRole = await authenticationService.GetAuthenticatedRole();
-        return MakeAuthenticationState(authenticatedRole);
+        var authState = await authenticationService.GetSignedInState();
+        return MakeAuthenticationState(authState.Role);
     }
 
-    private static AuthenticationState MakeAuthenticationState(string role)
+    private static AuthenticationState MakeAuthenticationState(string? role)
     {
         return !string.IsNullOrEmpty(role)
             ? new AuthenticationState(MakeClaimsPrinicpal(role))

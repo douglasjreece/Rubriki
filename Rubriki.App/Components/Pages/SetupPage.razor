@@ -3,7 +3,16 @@
 
 <h3>Set Up</h3>
 
-<button class="btn btn-primary" @onclick="ClickedEvent">Initialize App Data</button>
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <button class="btn btn-primary" @onclick="ClickedEvent">Initialize App Data</button>
+    </Authorized>
+    <NotAuthorized>
+        <div class="alert alert-warning">
+            <p>You must be signed in with an Admin role to set up the application.</p>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
 
 <div class="mt-3">
     <Rubriki.SharedComponents.ActivityIndicator Visible="@model.IsWorking"/>

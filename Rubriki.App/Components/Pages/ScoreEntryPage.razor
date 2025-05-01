@@ -4,9 +4,19 @@
 
 <h3>Score Entry</h3>
 
-<div style="max-width:1000px">
-    <ScoreEntryPanel ContestantId="@ContestantId"/>
-</div>
+<AuthorizeView>
+    <Authorized>
+        <div style="max-width:1000px">
+            <ScoreEntryPanel ContestantId="@ContestantId"/>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="alert alert-warning">
+            <p>You must be signed in to enter scores.</p>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
 
 @code {
     [Parameter]

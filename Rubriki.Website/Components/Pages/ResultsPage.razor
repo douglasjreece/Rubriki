@@ -4,4 +4,14 @@
 <PageTitle>Results</PageTitle>
 
 <h3>Results</h3>
-<ResultsPanel />
+
+<AuthorizeView>
+    <Authorized>
+        <ResultsPanel />
+    </Authorized>
+    <NotAuthorized>
+        <div class="alert alert-warning">
+            <p>You must be signed in to view results.</p>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>

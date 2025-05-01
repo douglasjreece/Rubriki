@@ -1,6 +1,4 @@
 ﻿@page "/admin"
-@using Microsoft.AspNetCore.Components.Authorization
-@using Rubriki.SharedComponents
 @inject Model model
 
 <PageTitle>Admin</PageTitle>
@@ -12,7 +10,9 @@
         <button class="btn btn-primary" @onclick="ResetDataClicked">Reset Database</button>
     </Authorized>
     <NotAuthorized>
-        <p>These functions require an Admin role.</p>
+        <div class="alert alert-warning">
+            <p>These functions require an Admin role.</p>
+        </div>
     </NotAuthorized>
 </AuthorizeView>
 

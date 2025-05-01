@@ -50,6 +50,8 @@ public class Program
         {
             options.JudgeCode = configuration.GetValue<string>("Auth:JudgeCode") ?? throw new InvalidOperationException("JudgeCode is not set.");
             options.AdminCode = configuration.GetValue<string>("Auth:AdminCode") ?? throw new InvalidOperationException("AdminCode is not set.");
+            options.AesEncryptionKey = new Guid("{131ADCF2-7243-4179-AECF-FC3228A94946}");
+            options.AesEncryptionIV = new Guid("{A0E4D1F2-3C7B-4F5A-8E6C-9D5B2A0D3E8F}");
         });
 
         var app = builder.Build();

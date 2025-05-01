@@ -12,15 +12,33 @@ public class ServerAuthenticationService(CookieService cookieService, ServerAuth
         public Guid AesEncryptionIV { get; set; } = Guid.Empty;
     }
 
-    public async Task<string> GetAuthenticatedRole()
+    public async Task<AuthenticationResult> GetSignedInState()
     {
         var token = await cookieService.GetValue(cookieName);
-        if (string.IsNullOrEmpty(token))
+        return await GetStateForToken(token);
+    }
+
+    public async Task<AuthenticationResult> GetStateForToken(string token)
+    {
+        string GetRole()
         {
-            return string.Empty;
+            if (string.IsNullOrEmpty(token))
+            {
+                return string.Empty;
+            }
+            try
+            {
+                var secretCode = Encrypter.DecryptStringFromBase64(token, options.AesEncryptionKey, options.AesEncryptionIV);
+                return GetAuthenticatedRole(secretCode);
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
         }
-        var secretCode = Encrypter.DecryptStringFromBase64(token, options.AesEncryptionKey, options.AesEncryptionIV);
-        return GetAuthenticatedRole(secretCode);
+
+        var role = GetRole();
+        return await Task.FromResult(new AuthenticationResult(role, token));
     }
 
     public async Task<AuthenticationResult> SignIn(string secretCode, bool persist)
@@ -58,4 +76,5 @@ public class ServerAuthenticationService(CookieService cookieService, ServerAuth
             _ => string.Empty,
         };
     }
+
 }

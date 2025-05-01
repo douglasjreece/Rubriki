@@ -3,7 +3,16 @@
 
 <PageTitle>Contestant</PageTitle>
 
-<ContestantPanel ContestantId="@Id" />
+<AuthorizeView>
+    <Authorized>
+        <ContestantPanel ContestantId="@Id" />
+    </Authorized>
+    <NotAuthorized>
+        <div class="alert alert-warning">
+            <p>You must be signed in to view contestant details.</p>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
 
 
 @code {

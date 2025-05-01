@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Controls;
+using Rubriki.App.Authentication;
 using Rubriki.App.Components;
+using Rubriki.Authentication;
 using Rubriki.Cqrs;
 using Rubriki.Repository;
 using Rubriki.SharedComponents;
@@ -13,7 +14,12 @@ public static class MauiProgram
 {
 	public static MauiApp CreateMauiApp()
 	{
-		var builder = MauiApp.CreateBuilder();
+        string appDataDirectory = FileSystem.AppDataDirectory;
+        const string dbFileName = "rubriki.db";
+		const string authStateFileName = "authstate.json";
+        const string apiEndpoint = "https://localhost:7254";
+
+        var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
 			.ConfigureFonts(fonts =>
@@ -30,18 +36,27 @@ public static class MauiProgram
 #endif
         var services = builder.Services;
 
-		const string dbFileName = "rubriki.db";
-        var dbFilePath = Path.Combine(FileSystem.AppDataDirectory, dbFileName);
+        var dbFilePath = Path.Combine(appDataDirectory, dbFileName);
         services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite($"Data Source={dbFilePath}"));
 
 		services.AddModels();
 		services.AddAppCqrs();
 		services.AddAppUseCases(options =>
 		{
-			options.ApiEndpoint = new("https://localhost:7254");
+			options.ApiEndpoint = new Uri(apiEndpoint);
 		});
 
-		services.AddSharedComponents();
+        services.AddCascadingAuthenticationState();
+        services.AddAuthorizationCore();
+
+        services.AddSecretCodeAuthentication();
+        services.AddAppAuthentication(options =>
+        {
+            options.ApiEndpoint = new Uri(apiEndpoint);
+            options.AuthDataFilePath = Path.Combine(appDataDirectory, authStateFileName);
+        });
+
+        services.AddSharedComponents();
 
         return builder.Build();
 	}

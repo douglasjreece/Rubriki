@@ -14,9 +14,30 @@ public class AppController(IServiceProvider provider, ISecretCodeAuthenticationS
         return Ok("Hello from Rubriki API");
     }
 
-    [HttpGet("seed-data")]
-    public IActionResult GetSeedData()
+    [HttpPost("authenticate")]
+    public async Task<IActionResult> Authenticate([FromBody] AuthenticationRequest request)
     {
+        AuthenticationResult authState = await authenticationService.SignIn(request.SecretCode, persist: false);
+        if (!authState.IsAuthenticated)
+        {
+            return Unauthorized("Invalid secret code");
+        }
+        return Ok(authState);
+    }
+
+    [HttpGet("seed-data")]
+    public async Task<IActionResult> GetSeedData([FromHeader] string token)
+    {
+        var authState = await authenticationService.GetStateForToken(token);
+        if (!authState.IsAuthenticated)
+        {
+            return Unauthorized("Invalid token");
+        }
+        if (authState.Role != RoleName.Admin)
+        {
+            return Unauthorized("Only admins can access seed data");
+        }
+
         var seedData = provider.GetService<SeedData>();
         return Ok(seedData);
     }
@@ -25,12 +46,12 @@ public class AppController(IServiceProvider provider, ISecretCodeAuthenticationS
     public async Task<IActionResult> SubmitScore(
         int contestantId,
         [FromBody] ScoreSubmission? submission,
-        [FromHeader] string secretCode)
+        [FromHeader] string token)
     {
-        var authState = await authenticationService.SignIn(secretCode, persist:false);
+        var authState = await authenticationService.GetStateForToken(token);
         if (!authState.IsAuthenticated)
         {
-            return Unauthorized("Invalid secret code");
+            return Unauthorized("Invalid token");
         }
 
         if (submission is null)

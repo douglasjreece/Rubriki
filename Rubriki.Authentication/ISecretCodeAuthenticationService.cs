@@ -2,7 +2,8 @@
 
 public interface ISecretCodeAuthenticationService
 {
-    Task<string> GetAuthenticatedRole();
+    Task<AuthenticationResult> GetSignedInState();
+    Task<AuthenticationResult> GetStateForToken(string token);
     Task<AuthenticationResult> SignIn(string secretCode, bool persist);
     Task SignOut();
 }

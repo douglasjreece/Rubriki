@@ -6,7 +6,7 @@ namespace Rubriki.UseCases;
 
 public class SubmitScoresUseCase(AppQuery query, AppCommand command, AppUseCaseOptions options)
 {
-    public async Task Invoke(string secretCode)
+    public async Task Invoke(string authToken)
     {
         var client = new HttpClient();
 
@@ -27,7 +27,7 @@ public class SubmitScoresUseCase(AppQuery query, AppCommand command, AppUseCaseO
                 Content = JsonContent.Create(submission),
                 Headers =
                 {
-                    { "SecretCode", secretCode }
+                    { "Token", authToken }
                 }
             };
             var response = await client.SendAsync(request);

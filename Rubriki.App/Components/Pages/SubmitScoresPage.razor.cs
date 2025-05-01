@@ -1,15 +1,14 @@
-﻿using Rubriki.Cqrs;
+﻿using Rubriki.Authentication;
+using Rubriki.Cqrs;
 using Rubriki.UseCases;
 
 namespace Rubriki.App.Components.Pages;
 
 public partial class SubmitScoresPage
 {
-    public class Model(AppQuery query, SubmitScoresUseCase useCase)
+    public class Model(ISecretCodeAuthenticationService authenticationService, AppQuery query, SubmitScoresUseCase useCase)
     {
         public int? ScoresToSubmit { get; private set; }
-
-        public string SecretCode { get; set; } = string.Empty;
 
         public string? SuccessMessage { get; private set; }
         public string? ErrorMessage { get; private set; }
@@ -35,7 +34,14 @@ public partial class SubmitScoresPage
 
             try
             {
-                await useCase.Invoke(SecretCode);
+                var authState = await authenticationService.GetSignedInState();
+                if (string.IsNullOrEmpty(authState.Token))
+                {
+                    ErrorMessage = "Authentication token is missing.";
+                    return;
+                }
+
+                await useCase.Invoke(authState.Token);
                 SuccessMessage = "Scores submitted successfully.";
                 ScoresToSubmit = 0;
             }
