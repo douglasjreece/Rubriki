@@ -15,7 +15,7 @@ public class CookieService
 
     public async Task SetValue(string key, string value, int? days = null)
     {
-        var curExp = (days != null) ? (days > 0 ? DateToUTC(days.Value) : "") : expires;
+        var curExp = days != null ? days > 0 ? DateToUTC(days.Value) : "" : expires;
         await SetCookie($"{key}={value}; expires={curExp}; path=/");
     }
 

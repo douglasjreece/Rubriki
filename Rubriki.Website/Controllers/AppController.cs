@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Rubriki.Dto;
-using Rubriki.Website.Authentication;
+using Rubriki.Authentication;
 
 namespace Rubriki.Website.Controllers;
 
 [ApiController]
 [Route("/api/app")]
-public class AppController(IServiceProvider provider, SecretCodeAuthStateProvider authStateProvider) : ControllerBase
+public class AppController(IServiceProvider provider, ISecretCodeAuthenticationService authenticationService) : ControllerBase
 {
     [HttpGet("hello")]
     public IActionResult GetHello()
@@ -27,8 +27,8 @@ public class AppController(IServiceProvider provider, SecretCodeAuthStateProvide
         [FromBody] ScoreSubmission? submission,
         [FromHeader] string secretCode)
     {
-        var authState = authStateProvider.MakeAuthenticationState(secretCode);
-        if (!authState.IsAuthenticated())
+        var authState = await authenticationService.SignIn(secretCode, persist:false);
+        if (!authState.IsAuthenticated)
         {
             return Unauthorized("Invalid secret code");
         }

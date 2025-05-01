@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
-namespace Rubriki.Website.Authentication;
+namespace Rubriki.Authentication;
 
 public static class AuthenticationStateExtensions
 {

@@ -3,7 +3,7 @@ using Rubriki.Cqrs;
 using Rubriki.Repository;
 using Rubriki.SharedComponents;
 using Rubriki.UseCases;
-using Rubriki.Website.Authentication;
+using Rubriki.Authentication;
 using Rubriki.Website.Components;
 
 namespace Rubriki.Website;
@@ -45,19 +45,12 @@ public class Program
         services.AddCascadingAuthenticationState();
         //services.AddAuthorizationCore();
 
-#if false
-        services.AddAuthentication()
-            .AddSecretCodeAuthentication(options =>
-            {
-                options.SecretCode = configuration.GetValue<string>("Auth:SecretCode") ?? throw new InvalidOperationException("SecretCode is not set.");
-            });
-#else
-        services.AddSecretCodeAuthentication(options =>
+        services.AddSecretCodeAuthentication();
+        services.AddServerAuthentication(options =>
         {
             options.JudgeCode = configuration.GetValue<string>("Auth:JudgeCode") ?? throw new InvalidOperationException("JudgeCode is not set.");
             options.AdminCode = configuration.GetValue<string>("Auth:AdminCode") ?? throw new InvalidOperationException("AdminCode is not set.");
         });
-#endif
 
         var app = builder.Build();
 

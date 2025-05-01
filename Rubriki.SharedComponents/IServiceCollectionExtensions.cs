@@ -9,6 +9,7 @@ public static class IServiceCollectionExtensions
         services.AddScoped<ScoreEntryPanel.Model>();
         services.AddScoped<ResultsPanel.Model>();
         services.AddScoped<ContestantPanel.Model>();
+        services.AddScoped<SignInPanel.Model>();
         return services;
     }
 }

@@ -1,0 +1,28 @@
+﻿@using Rubriki.Authentication
+@inject Model model
+@inject NavigationManager navigation
+
+<AuthorizeView>
+    <Authorized>
+        <div>Signed in with role of @context.GetPrimaryRole()</div>
+        <button class="btn btn-primary mt-3" @onclick="SignOutClicked">Sign Out</button>
+    </Authorized>
+    <NotAuthorized>
+        <InputText type="password" @bind-Value="model.SecretCode" class="form-control" placeholder="Secret Code" />
+        <button class="btn btn-primary mt-3" @onclick="SignInClicked">Sign In</button>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private async Task SignInClicked()
+    {
+        await model.SignIn();
+        navigation.NavigateTo("/", forceLoad:true);
+    }
+
+    private async Task SignOutClicked()
+    {
+        await model.SignOut();
+        navigation.NavigateTo("/", forceLoad: true);
+    }
+}

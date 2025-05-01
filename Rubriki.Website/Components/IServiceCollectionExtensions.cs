@@ -6,7 +6,6 @@ public static class IServiceCollectionExtensions
 {
     public static IServiceCollection AddWebsiteModels(this IServiceCollection services)
     {
-        services.AddScoped<Home.Model>();
         services.AddScoped<AdminPage.Model>();
         return services;
     }

@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Rubriki.Authentication\Rubriki.Authentication.csproj" />
     <ProjectReference Include="..\Rubriki.Cqrs\Rubriki.Cqrs.csproj" />
     <ProjectReference Include="..\Rubriki.Dto\Rubriki.Dto.csproj" />
   </ItemGroup>
