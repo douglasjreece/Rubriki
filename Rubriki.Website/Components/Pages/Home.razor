@@ -1,7 +1,26 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
+@inject Model model
 
 <PageTitle>Home</PageTitle>
 
 <h1>Rubriki</h1>
 <h2>Making rubrics data entry fun again!</h2>
 
+<AuthorizeView>
+    <Authorized>
+        <span>Signed in with role of @context.GetPrimaryRole()</span>
+    </Authorized>
+    <NotAuthorized>
+        <InputText type="password" @bind-Value="model.SecretCode" class="form-control" placeholder="Secret Code" />
+        <button class="btn btn-primary mt-3" @onclick="SubmitEvent">Sign In</button>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private async Task SubmitEvent()
+    {
+        await model.SignIn();
+        StateHasChanged();
+    }
+}

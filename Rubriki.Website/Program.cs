@@ -3,6 +3,7 @@ using Rubriki.Cqrs;
 using Rubriki.Repository;
 using Rubriki.SharedComponents;
 using Rubriki.UseCases;
+using Rubriki.Website.Authentication;
 using Rubriki.Website.Components;
 
 namespace Rubriki.Website;
@@ -40,6 +41,24 @@ public class Program
 
         services.AddSingleton(seedData);
 
+        services.AddAuthentication();
+        services.AddCascadingAuthenticationState();
+        //services.AddAuthorizationCore();
+
+#if false
+        services.AddAuthentication()
+            .AddSecretCodeAuthentication(options =>
+            {
+                options.SecretCode = configuration.GetValue<string>("Auth:SecretCode") ?? throw new InvalidOperationException("SecretCode is not set.");
+            });
+#else
+        services.AddSecretCodeAuthentication(options =>
+        {
+            options.JudgeCode = configuration.GetValue<string>("Auth:JudgeCode") ?? throw new InvalidOperationException("JudgeCode is not set.");
+            options.AdminCode = configuration.GetValue<string>("Auth:AdminCode") ?? throw new InvalidOperationException("AdminCode is not set.");
+        });
+#endif
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -54,6 +73,8 @@ public class Program
         app.UseRouting();
         app.UseAntiforgery();
         app.MapControllers();
+
+        //app.UseAuthorization();
 
         app.MapStaticAssets();
         app.MapRazorComponents<App>()

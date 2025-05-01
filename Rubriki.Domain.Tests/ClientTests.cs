@@ -23,7 +23,6 @@ namespace Rubriki.Domain.Tests
             context.Database.EnsureCreated();
 
             var adminCommand = new Cqrs.SetupCommand(context);
-            var adminQuery = new Cqrs.AdminQuery(context);
             var clientCommand = new Cqrs.ClientCommand(context);
             var clientQuery = new Cqrs.ClientQuery(context);
             var seed = new Dto.SeedData
@@ -49,7 +48,7 @@ namespace Rubriki.Domain.Tests
             var criterias = await clientQuery.GetCriteria(category.Id);
             await clientCommand.SetScore(contestant.Id, judge.Id, criterias[0].Id, 1, "");
             await clientCommand.SetScore(contestant.Id, judge.Id, criterias[1].Id, 2, "");
-            var results = await adminQuery.GetResults();
+            var results = await clientQuery.GetResults();
             var contestantResult = results.First();
 
             // Assert
@@ -69,7 +68,6 @@ namespace Rubriki.Domain.Tests
             context.Database.EnsureCreated();
 
             var adminCommand = new Cqrs.SetupCommand(context);
-            var adminQuery = new Cqrs.AdminQuery(context);
             var clientCommand = new Cqrs.ClientCommand(context);
             var clientQuery = new Cqrs.ClientQuery(context);
             var seed = new Dto.SeedData
@@ -95,10 +93,10 @@ namespace Rubriki.Domain.Tests
             var criterias = await clientQuery.GetCriteria(category.Id);
             await clientCommand.SetScore(contestant.Id, judge.Id, criterias[0].Id, 1, "");
             await clientCommand.SetScore(contestant.Id, judge.Id, criterias[1].Id, 2, "");
-            var firstResults = await adminQuery.GetResults();
+            var firstResults = await clientQuery.GetResults();
             var firstContestantResult = firstResults.First();
             await clientCommand.SetScore(contestant.Id, judge.Id, criterias[1].Id, 3, "");
-            var secondResults = await adminQuery.GetResults();
+            var secondResults = await clientQuery.GetResults();
             var secondContestantResult = secondResults.First();
 
             // Assert

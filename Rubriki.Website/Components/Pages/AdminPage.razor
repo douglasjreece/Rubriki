@@ -1,4 +1,5 @@
 ﻿@page "/admin"
+@using Microsoft.AspNetCore.Components.Authorization
 @using Rubriki.SharedComponents
 @inject Model model
 
@@ -6,12 +7,21 @@
 
 <h3>Admin Functions</h3>
 
-<button class="btn btn-primary" @onclick="ResetDataClicked">Reset Database</button>
+<AuthorizeView Roles="Admin">
+    <Authorized >
+        <button class="btn btn-primary" @onclick="ResetDataClicked">Reset Database</button>
+    </Authorized>
+    <NotAuthorized>
+        <p>These functions require an Admin role.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
 <ActivityIndicator Visible="@model.IsWorking" />
 <SuccessMessage Message="@model.SuccessMessage" />
 <ErrorMessage Message="@model.ErrorMessage" />
 
 @code {
+
     async Task ResetDataClicked()
     {
         await model.ResetData();
