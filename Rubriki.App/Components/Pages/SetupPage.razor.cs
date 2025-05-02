@@ -1,11 +1,10 @@
-﻿using Rubriki.Authentication;
-using Rubriki.UseCases;
+﻿using Rubriki.UseCases;
 
 namespace Rubriki.App.Components.Pages;
 
 public partial class SetupPage
 {
-    public class Model(ISecretCodeAuthenticationService authenticationService, InitializeAppDatabaseUseCase useCase)
+    public class Model(InitializeAppDatabaseUseCase useCase)
     {
         public string? SuccessMessage { get; private set; }
         public string? ErrorMessage { get; private set; }
@@ -19,14 +18,7 @@ public partial class SetupPage
 
             try
             {
-                var authState = await authenticationService.GetSignedInState();
-                if (string.IsNullOrEmpty(authState.Token))
-                {
-                    ErrorMessage = "Authentication token is missing.";
-                    return;
-                }
-
-                await useCase.Invoke(authState.Token);
+                await useCase.Invoke();
                 SuccessMessage = "Database initialized successfully.";
             }
             catch (Exception ex)

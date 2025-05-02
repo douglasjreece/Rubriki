@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Rubriki.App.ApiCqrs;
 using Rubriki.App.Authentication;
 using Rubriki.App.Components;
 using Rubriki.Authentication;
@@ -40,7 +41,11 @@ public static class MauiProgram
         services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite($"Data Source={dbFilePath}"));
 
 		services.AddModels();
-		services.AddAppCqrs();
+		services.AddApiCqrs(options =>
+        {
+            options.ApiEndpoint = new Uri(apiEndpoint);
+        });
+        services.AddAppCqrs();
 		services.AddAppUseCases(options =>
 		{
 			options.ApiEndpoint = new Uri(apiEndpoint);

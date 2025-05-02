@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Rubriki.Dto;
 using Rubriki.Authentication;
+using Rubriki.Api;
 
 namespace Rubriki.Website.Controllers;
 
 [ApiController]
-[Route("/api/app")]
+[Route(ApiConst.AppPath)]
 public class AppController(IServiceProvider provider, ISecretCodeAuthenticationService authenticationService) : ControllerBase
 {
     [HttpGet("hello")]
@@ -14,7 +15,7 @@ public class AppController(IServiceProvider provider, ISecretCodeAuthenticationS
         return Ok("Hello from Rubriki API");
     }
 
-    [HttpPost("authenticate")]
+    [HttpPost(ApiConst.AuthenticationResource)]
     public async Task<IActionResult> Authenticate([FromBody] AuthenticationRequest request)
     {
         AuthenticationResult authState = await authenticationService.SignIn(request.SecretCode, persist: false);
@@ -25,8 +26,8 @@ public class AppController(IServiceProvider provider, ISecretCodeAuthenticationS
         return Ok(authState);
     }
 
-    [HttpGet("seed-data")]
-    public async Task<IActionResult> GetSeedData([FromHeader] string token)
+    [HttpGet(ApiConst.SeedDataResource)]
+    public async Task<IActionResult> GetSeedData([FromHeader(Name = ApiConst.TokenHeader)] string token)
     {
         var authState = await authenticationService.GetStateForToken(token);
         if (!authState.IsAuthenticated)
@@ -42,11 +43,11 @@ public class AppController(IServiceProvider provider, ISecretCodeAuthenticationS
         return Ok(seedData);
     }
 
-    [HttpPut("submit-score/{contestantId}")]
+    [HttpPut($"{ApiConst.ScoreResource}/{{contestantId}}")]
     public async Task<IActionResult> SubmitScore(
         int contestantId,
         [FromBody] ScoreSubmission? submission,
-        [FromHeader] string token)
+        [FromHeader(Name = ApiConst.TokenHeader)] string token)
     {
         var authState = await authenticationService.GetStateForToken(token);
         if (!authState.IsAuthenticated)

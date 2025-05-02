@@ -1,6 +1,6 @@
-﻿using Rubriki.Authentication;
+﻿using Rubriki.Api;
+using Rubriki.Authentication;
 using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
 
 namespace Rubriki.App.Authentication;
@@ -34,7 +34,7 @@ public class AppAuthenticationService(AppAuthenticationService.Options options) 
 
     public async Task<AuthenticationResult> SignIn(string secretCode, bool persist)
     {
-        var url = new UriBuilder(options.ApiEndpoint) { Path = $"/api/app/authenticate" }.ToString();
+        var url = new UriBuilder(options.ApiEndpoint) { Path = $"{ApiConst.AppPath}/{ApiConst.AuthenticationResource}" }.ToString();
         var request = new HttpRequestMessage(HttpMethod.Post, url)
         {
             Content = JsonContent.Create(new AuthenticationRequest(secretCode))
