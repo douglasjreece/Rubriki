@@ -14,11 +14,13 @@ public class ScoreCommand(Repository.ApplicationDbContext db)
         var existingScore = await db.Scores.FirstOrDefaultAsync(x => x.Contestant!.Id == contestantId && x.Criteria!.Id == criteriaId);
         if (existingScore != null)
         {
+            // Update existing score
             existingScore.Level = level;
             existingScore.Comment = comment;
         }
         else
         {
+            // Create new score
             var newScore = new Repository.Score 
             { 
                 Contestant = contestant, 
@@ -30,6 +32,13 @@ public class ScoreCommand(Repository.ApplicationDbContext db)
             db.Scores.Add(newScore);
         }
 
+        await db.SaveChangesAsync();
+    }
+
+    public async Task ClearScores()
+    {
+        var scores = await db.Scores.ToListAsync();
+        db.Scores.RemoveRange(scores);
         await db.SaveChangesAsync();
     }
 }

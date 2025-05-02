@@ -16,9 +16,10 @@ public static class MauiProgram
 	public static MauiApp CreateMauiApp()
 	{
         string appDataDirectory = FileSystem.AppDataDirectory;
-        const string dbFileName = "rubriki.db";
+        const string dbFileName = "data.db";
 		const string authStateFileName = "authstate.json";
-        const string apiEndpoint = "http://10.0.2.2:5180"; // https://localhost:7254";
+        const string apiEndpoint = "https://localhost:7254";
+        //const string apiEndpoint = "http://10.0.2.2:5180"; // https://localhost:7254";
         //const string apiEndpoint = "https://www.songshowplus.com";
 
         var builder = MauiApp.CreateBuilder();
@@ -42,15 +43,15 @@ public static class MauiProgram
         services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite($"Data Source={dbFilePath}"));
 
 		services.AddModels();
-		services.AddApiCqrs(options =>
+        services.AddCqrs(options =>
+        {
+            options.StorageOptions.AppDataDirectory = appDataDirectory;
+        });
+        services.AddApiCqrs(options =>
         {
             options.ApiEndpoint = new Uri(apiEndpoint);
         });
-        services.AddAppCqrs();
-		services.AddAppUseCases(options =>
-		{
-			options.ApiEndpoint = new Uri(apiEndpoint);
-		});
+		services.AddAppUseCases();
 
         services.AddCascadingAuthenticationState();
         services.AddAuthorizationCore();
@@ -59,7 +60,7 @@ public static class MauiProgram
         services.AddAppAuthentication(options =>
         {
             options.ApiEndpoint = new Uri(apiEndpoint);
-            options.AuthDataFilePath = Path.Combine(appDataDirectory, authStateFileName);
+            options.AuthDataFileName = authStateFileName;
         });
 
         services.AddSharedComponents();

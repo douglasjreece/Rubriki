@@ -2,7 +2,7 @@
 
 namespace Rubriki.UseCases;
 
-public class InitializeAppDatabaseUseCase(ApiQuery query, SetupCommand command, AppUseCaseOptions options)
+public class InitializeAppDatabaseUseCase(ApiQuery query, SetupCommand command)
 {
     public async Task Invoke()
     {

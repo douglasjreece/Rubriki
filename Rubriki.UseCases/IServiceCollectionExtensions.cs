@@ -15,11 +15,8 @@ public static class IServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddAppUseCases(this IServiceCollection services, Action<AppUseCaseOptions> getOptions)
+    public static IServiceCollection AddAppUseCases(this IServiceCollection services)
     {
-        var options = new AppUseCaseOptions();
-        getOptions(options);
-        services.AddSingleton(options);
         services.AddScoped<InitializeAppDatabaseUseCase>();
         services.AddScoped<SubmitScoresUseCase>();
         return services;

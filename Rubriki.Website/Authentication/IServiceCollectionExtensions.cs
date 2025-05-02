@@ -10,7 +10,6 @@ public static class IServiceCollectionExtensions
         getOptions(options);
         services.AddSingleton(options);
         services.AddScoped<ISecretCodeAuthenticationService, ServerAuthenticationService>();
-        services.AddTransient<CookieService>();
 
         return services;
     }

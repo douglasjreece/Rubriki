@@ -5,7 +5,7 @@ namespace Rubriki.App.Components.Pages;
 
 public partial class SubmitScoresPage
 {
-    public class Model(AppQuery query, SubmitScoresUseCase useCase)
+    public class Model(ScoreQuery query, SubmitScoresUseCase useCase)
     {
         public int? ScoresToSubmit { get; private set; }
 

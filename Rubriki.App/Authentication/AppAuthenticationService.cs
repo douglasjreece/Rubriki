@@ -1,26 +1,24 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Rubriki.Api;
+﻿using Rubriki.Api;
 using Rubriki.Authentication;
+using Rubriki.Cqrs;
 using System.Net.Http.Json;
 using System.Security.Authentication;
-using System.Text.Json;
 
 namespace Rubriki.App.Authentication;
 
-public class AppAuthenticationService(AppAuthenticationService.Options options) : ISecretCodeAuthenticationService
+public class AppAuthenticationService(StorageQuery storageQuery, StorageCommand storageCommand, AppAuthenticationService.Options options) : ISecretCodeAuthenticationService
 {
     public class Options
     {
         public Uri ApiEndpoint { get; set; } = default!;
-        public string AuthDataFilePath { get; set; } = default!;
+        public string AuthDataFileName { get; set; } = default!;
     }
 
     public async Task<AuthenticationResult> GetSignedInState()
     {
         try
         {
-            var jsonText = await File.ReadAllTextAsync(options.AuthDataFilePath);
-            var authData = JsonSerializer.Deserialize<AuthenticationResult>(jsonText);
+            var authData = await storageQuery.GetOrDefault<AuthenticationResult>(options.AuthDataFileName);
             return authData ?? AuthenticationResult.Empty;
         }
         catch
@@ -59,8 +57,7 @@ public class AppAuthenticationService(AppAuthenticationService.Options options) 
 
         if (persist)
         {
-            var jsonText = JsonSerializer.Serialize(result);
-            await File.WriteAllTextAsync(options.AuthDataFilePath, jsonText);
+            await storageCommand.Store(options.AuthDataFileName, result);
         }
 
         return result;
@@ -68,13 +65,7 @@ public class AppAuthenticationService(AppAuthenticationService.Options options) 
 
     public async Task SignOut()
     {
-        await Task.Run(() =>
-        {
-            if (File.Exists(options.AuthDataFilePath))
-            {
-                File.Delete(options.AuthDataFilePath);
-            }
-        });
+        await storageCommand.Remove(options.AuthDataFileName);
     }
 
 }

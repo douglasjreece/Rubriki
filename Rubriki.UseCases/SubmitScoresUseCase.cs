@@ -2,16 +2,16 @@
 
 namespace Rubriki.UseCases;
 
-public class SubmitScoresUseCase(AppQuery query, AppCommand command, ApiCommand apiCommand)
+public class SubmitScoresUseCase(ScoreQuery scoreQuery, ScoreCommand scoreCommand, ApiCommand apiCommand)
 {
     public async Task Invoke()
     {
-        var scores = await query.GetScores();
+        var scores = await scoreQuery.GetScores();
         foreach (var score in scores)
         {
             await apiCommand.SubmitScore(score);
         }
 
-        await command.ClearScores();
+        await scoreCommand.ClearScores();
     }
 }

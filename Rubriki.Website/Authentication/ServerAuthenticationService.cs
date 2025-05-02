@@ -1,8 +1,9 @@
 ﻿using Rubriki.Authentication;
+using Rubriki.Website.CookieCqrs;
 
 namespace Rubriki.Website.Authentication;
 
-public class ServerAuthenticationService(CookieService cookieService, ServerAuthenticationService.Options options) : ISecretCodeAuthenticationService
+public class ServerAuthenticationService(CookieQuery cookieQuery, CookieCommand cookieCommand, ServerAuthenticationService.Options options) : ISecretCodeAuthenticationService
 {
     public class Options
     {
@@ -14,7 +15,7 @@ public class ServerAuthenticationService(CookieService cookieService, ServerAuth
 
     public async Task<AuthenticationResult> GetSignedInState()
     {
-        var token = await cookieService.GetValue(cookieName);
+        var token = await cookieQuery.GetValue(cookieName);
         return await GetStateForToken(token);
     }
 
@@ -50,7 +51,7 @@ public class ServerAuthenticationService(CookieService cookieService, ServerAuth
             var token = Encrypter.EncryptStringToBase64(secretCode, options.AesEncryptionKey, options.AesEncryptionIV);
             if (persist)
             {
-                await cookieService.SetValue(cookieName, token);
+                await cookieCommand.SetValue(cookieName, token);
             }
             return new AuthenticationResult(role, token);
         }
@@ -62,7 +63,7 @@ public class ServerAuthenticationService(CookieService cookieService, ServerAuth
 
     public async Task SignOut()
     {
-        await cookieService.SetValue(cookieName, string.Empty);
+        await cookieCommand.SetValue(cookieName, string.Empty);
     }
 
     private string cookieName = "token";

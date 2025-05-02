@@ -5,6 +5,7 @@ using Rubriki.SharedComponents;
 using Rubriki.UseCases;
 using Rubriki.Authentication;
 using Rubriki.Website.Components;
+using Rubriki.Website.CookieCqrs;
 
 namespace Rubriki.Website;
 
@@ -12,6 +13,9 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        string appDataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Rubriki");
+        const string dbFileName = "data.db";
+
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
@@ -27,12 +31,16 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
 
-        var dbFilePath = configuration.GetValue<string>("Database:FilePath") ?? throw new InvalidOperationException("Database:FilePath is not set.");
+        //var dbFilePath = configuration.GetValue<string>("Database:FilePath") ?? throw new InvalidOperationException("Database:FilePath is not set.");
+        var dbFilePath = Path.Combine(appDataDirectory, dbFileName);
         services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite($"Data Source={dbFilePath}"));
 
         services.AddControllers();
 
-        services.AddWebsiteCqrs();
+        services.AddCqrs(options =>
+        {
+            options.StorageOptions.AppDataDirectory = appDataDirectory;
+        });
         services.AddAdminUseCases();
         services.AddClientUseCases();
 
@@ -43,9 +51,9 @@ public class Program
 
         services.AddAuthentication();
         services.AddCascadingAuthenticationState();
-        //services.AddAuthorizationCore();
 
         services.AddSecretCodeAuthentication();
+        services.AddCookieCqrs();
         services.AddServerAuthentication(options =>
         {
             options.JudgeCode = configuration.GetValue<string>("Auth:JudgeCode") ?? throw new InvalidOperationException("JudgeCode is not set.");
@@ -81,6 +89,7 @@ public class Program
             using var scope = serviceProvider.CreateScope();
             var scopeSservices = scope.ServiceProvider;
             var dbContext = scopeSservices.GetRequiredService<ApplicationDbContext>();
+            Directory.CreateDirectory(appDataDirectory);
             dbContext.Database.EnsureCreated();
         }
 
