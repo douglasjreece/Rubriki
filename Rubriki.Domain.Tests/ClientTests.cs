@@ -23,8 +23,9 @@ namespace Rubriki.Domain.Tests
             context.Database.EnsureCreated();
 
             var adminCommand = new Cqrs.SetupCommand(context);
-            var clientCommand = new Cqrs.ClientCommand(context);
-            var clientQuery = new Cqrs.ClientQuery(context);
+            var clientCommand = new Cqrs.ScoreCommand(context);
+            var setupQuery = new Cqrs.SetupQuery(context);
+            var scoreQuery = new Cqrs.ScoreQuery(context);
             var seed = new Dto.SeedData
             {
                 CategoryAndCriteria =
@@ -39,16 +40,16 @@ namespace Rubriki.Domain.Tests
 
             // Act
             await adminCommand.Seed(seed);
-            var contestants = await clientQuery.GetContestants();
+            var contestants = await setupQuery.GetContestants();
             var contestant = contestants.First();
-            var judges = await clientQuery.GetJudges();
+            var judges = await setupQuery.GetJudges();
             var judge = judges.First();
-            var categories = await clientQuery.GetCategories();
+            var categories = await setupQuery.GetCategories();
             var category = categories.First();
-            var criterias = await clientQuery.GetCriteria(category.Id);
+            var criterias = await setupQuery.GetCriteria(category.Id);
             await clientCommand.SetScore(contestant.Id, judge.Id, criterias[0].Id, 1, "");
             await clientCommand.SetScore(contestant.Id, judge.Id, criterias[1].Id, 2, "");
-            var results = await clientQuery.GetResults();
+            var results = await scoreQuery.GetResults();
             var contestantResult = results.First();
 
             // Assert
@@ -68,8 +69,9 @@ namespace Rubriki.Domain.Tests
             context.Database.EnsureCreated();
 
             var adminCommand = new Cqrs.SetupCommand(context);
-            var clientCommand = new Cqrs.ClientCommand(context);
-            var clientQuery = new Cqrs.ClientQuery(context);
+            var clientCommand = new Cqrs.ScoreCommand(context);
+            var setupQuery = new Cqrs.SetupQuery(context);
+            var scoreQuery = new Cqrs.ScoreQuery(context);
             var seed = new Dto.SeedData
             {
                 CategoryAndCriteria =
@@ -84,19 +86,19 @@ namespace Rubriki.Domain.Tests
 
             // Act
             await adminCommand.Seed(seed);
-            var contestants = await clientQuery.GetContestants();
+            var contestants = await setupQuery.GetContestants();
             var contestant = contestants.First();
-            var judges = await clientQuery.GetJudges();
+            var judges = await setupQuery.GetJudges();
             var judge = judges.First();
-            var categories = await clientQuery.GetCategories();
+            var categories = await setupQuery.GetCategories();
             var category = categories.First();
-            var criterias = await clientQuery.GetCriteria(category.Id);
+            var criterias = await setupQuery.GetCriteria(category.Id);
             await clientCommand.SetScore(contestant.Id, judge.Id, criterias[0].Id, 1, "");
             await clientCommand.SetScore(contestant.Id, judge.Id, criterias[1].Id, 2, "");
-            var firstResults = await clientQuery.GetResults();
+            var firstResults = await scoreQuery.GetResults();
             var firstContestantResult = firstResults.First();
             await clientCommand.SetScore(contestant.Id, judge.Id, criterias[1].Id, 3, "");
-            var secondResults = await clientQuery.GetResults();
+            var secondResults = await scoreQuery.GetResults();
             var secondContestantResult = secondResults.First();
 
             // Assert

@@ -18,7 +18,7 @@ namespace Rubriki.Domain.Tests
             context.Database.EnsureCreated();
 
             var command = new Cqrs.SetupCommand(context);
-            var query = new Cqrs.ClientQuery(context);
+            var query = new Cqrs.SetupQuery(context);
             var seed = new Dto.SeedData
             {
                 CategoryAndCriteria =

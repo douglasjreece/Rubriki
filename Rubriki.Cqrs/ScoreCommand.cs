@@ -2,17 +2,8 @@
 
 namespace Rubriki.Cqrs;
 
-public class ClientCommand(Repository.ApplicationDbContext db)
+public class ScoreCommand(Repository.ApplicationDbContext db)
 {
-#if false
-    public async Task<bool> AddContestantAsync(string name)
-    {
-        var contestant = new Repository.Contestant { Name = name };
-        db.Contestants.Add(contestant);
-        return await db.SaveChangesAsync() > 0;
-    }
-#endif
-
     public async Task SetScore(int contestantId, int judgeId, int criteriaId, int levelId, string comment)
     {
         var contestant = await db.Contestants.FindAsync(contestantId) ?? throw new ArgumentException($"Contestant not found: {contestantId}.");

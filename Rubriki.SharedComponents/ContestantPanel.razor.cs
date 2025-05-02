@@ -1,20 +1,21 @@
-﻿using Rubriki.Dto;
+﻿using Rubriki.Cqrs;
+using Rubriki.Dto;
 
 namespace Rubriki.SharedComponents;
 
 public partial class ContestantPanel
 {
-    public class Model(Cqrs.ClientQuery query)
+    public class Model(SetupQuery setupQuery, ScoreQuery scoreQuery)
     {
         public Contestant? Contestant { get; private set; }
         public List<CriteriaScore> CriteriaScores { get; private set; } = [];
 
         public async Task Get(int contestantId)
         {
-            Contestant = await query.GetContestant(contestantId);
+            Contestant = await setupQuery.GetContestant(contestantId);
             CriteriaScores =
             [
-                .. (await query.GetContestantCategoryScores(contestantId))
+                .. (await scoreQuery.GetContestantCategoryScores(contestantId))
                     .OrderBy(x => x.Criteria.Category.Id)
                     .ThenBy(x => x.Criteria.Id)
             ];

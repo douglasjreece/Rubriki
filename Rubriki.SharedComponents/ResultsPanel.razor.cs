@@ -1,15 +1,16 @@
-﻿using Rubriki.Dto;
+﻿using Rubriki.Cqrs;
+using Rubriki.Dto;
 
 namespace Rubriki.SharedComponents;
 
 public partial class ResultsPanel
 {
-    public class Model(Cqrs.ClientQuery query)
+    public class Model(ScoreQuery scoreQuery)
     {
         public List<ContestantTotalScore> ResultsList { get; private set; } = [];
         public async Task Get()
         {
-            ResultsList = [.. (await query.GetResults()).OrderByDescending(x => x.Score)];
+            ResultsList = [.. (await scoreQuery.GetResults()).OrderByDescending(x => x.Score)];
         }
     }
 }

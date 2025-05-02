@@ -1,11 +1,12 @@
-﻿using Rubriki.Dto;
+﻿using Rubriki.Cqrs;
+using Rubriki.Dto;
 using System.ComponentModel.DataAnnotations;
 
 namespace Rubriki.SharedComponents;
 
 public partial class ScoreEntryPanel
 {
-    public class Model(Cqrs.ClientQuery query, Cqrs.ClientCommand command) : IValidatableObject
+    public class Model(SetupQuery setupQuery, ScoreQuery scoreQuery, ScoreCommand command) : IValidatableObject
     {
         public List<Judge> Judges { get; set; } = [];
         
@@ -69,10 +70,10 @@ public partial class ScoreEntryPanel
 
         public async Task Load()
         {
-            Judges = await query.GetJudges();
-            Categories = await query.GetCategories();
-            Contestants = await query.GetContestants();
-            Levels = await query.GetLevels();
+            Judges = await setupQuery.GetJudges();
+            Categories = await setupQuery.GetCategories();
+            Contestants = await setupQuery.GetContestants();
+            Levels = await setupQuery.GetLevels();
         }
 
         public async Task LoadCriteria()
@@ -85,7 +86,7 @@ public partial class ScoreEntryPanel
 
             if (int.TryParse(selectedCategoryId, out var categoryId))
             {
-                var criteria = await query.GetCriteria(categoryId);
+                var criteria = await setupQuery.GetCriteria(categoryId);
                 CriteriaEntries = 
                 [
                     .. criteria.Select(x => new CriteriaEntry
@@ -104,7 +105,7 @@ public partial class ScoreEntryPanel
         {
             if (int.TryParse(selectedContestantId, out var contestantId) && int.TryParse(selectedCategoryId, out var categoryId))
             {
-                currentScores = await query.GetContestantCategoryScores(contestantId, categoryId);
+                currentScores = await scoreQuery.GetContestantCategoryScores(contestantId, categoryId);
             }
             else
             {

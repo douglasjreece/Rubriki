@@ -59,7 +59,7 @@ public class AppController(IServiceProvider provider, ISecretCodeAuthenticationS
         {
             return BadRequest("Score data is required");
         }
-        var command = provider.GetRequiredService<Cqrs.ClientCommand>();
+        var command = provider.GetRequiredService<Cqrs.ScoreCommand>();
         await command.SetScore(contestantId, submission.JudgeId, submission.CriteriaId, submission.LevelId, submission.Comment);
         return Ok();
     }
