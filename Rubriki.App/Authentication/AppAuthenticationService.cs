@@ -1,6 +1,8 @@
-﻿using Rubriki.Api;
+﻿using Microsoft.AspNetCore.Authorization;
+using Rubriki.Api;
 using Rubriki.Authentication;
 using System.Net.Http.Json;
+using System.Security.Authentication;
 using System.Text.Json;
 
 namespace Rubriki.App.Authentication;
@@ -39,28 +41,29 @@ public class AppAuthenticationService(AppAuthenticationService.Options options) 
         {
             Content = JsonContent.Create(new AuthenticationRequest(secretCode))
         };
+
         var client = new HttpClient();
         var response = await client.SendAsync(request);
-        if (response.IsSuccessStatusCode)
-        {
-            var result = await response.Content.ReadFromJsonAsync<AuthenticationResult>();
-            if (result is null)
-            {
-                throw new Exception("Failed to deserialize authentication result.");
-            }
 
-            if (persist)
-            {
-                var jsonText = JsonSerializer.Serialize(result);
-                await File.WriteAllTextAsync(options.AuthDataFilePath, jsonText);
-            }
-
-            return result;
-        }
-        else
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
-            return AuthenticationResult.Empty;
+            throw new AuthenticationException("Invalid secret code.");
         }
+        response.EnsureSuccessStatusCode(); // throw exception for any other non-success status code
+
+        var result = await response.Content.ReadFromJsonAsync<AuthenticationResult>();
+        if (result is null)
+        {
+            throw new InvalidOperationException("Failed to deserialize authentication result.");
+        }
+
+        if (persist)
+        {
+            var jsonText = JsonSerializer.Serialize(result);
+            await File.WriteAllTextAsync(options.AuthDataFilePath, jsonText);
+        }
+
+        return result;
     }
 
     public async Task SignOut()

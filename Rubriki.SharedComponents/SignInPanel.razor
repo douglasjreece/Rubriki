@@ -10,14 +10,18 @@
     <NotAuthorized>
         <InputText type="password" @bind-Value="model.SecretCode" class="form-control" placeholder="Secret Code" />
         <button class="btn btn-primary mt-3" @onclick="SignInClicked">Sign In</button>
+        <ErrorMessage Message="@model.ErrorMessage" TopMargin="2"/>
     </NotAuthorized>
 </AuthorizeView>
 
 @code {
     private async Task SignInClicked()
     {
-        await model.SignIn();
-        navigation.NavigateTo("/", forceLoad:true);
+        var success = await model.SignIn();
+        if (success)
+        {
+            navigation.NavigateTo("/", forceLoad: true); // reload to update authentication state
+        }
     }
 
     private async Task SignOutClicked()

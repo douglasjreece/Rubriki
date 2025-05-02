@@ -18,7 +18,8 @@ public static class MauiProgram
         string appDataDirectory = FileSystem.AppDataDirectory;
         const string dbFileName = "rubriki.db";
 		const string authStateFileName = "authstate.json";
-        const string apiEndpoint = "https://localhost:7254";
+        const string apiEndpoint = "http://10.0.2.2:5180"; // https://localhost:7254";
+        //const string apiEndpoint = "https://www.songshowplus.com";
 
         var builder = MauiApp.CreateBuilder();
 		builder

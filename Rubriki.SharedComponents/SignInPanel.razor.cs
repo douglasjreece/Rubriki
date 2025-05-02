@@ -8,16 +8,29 @@ public partial class SignInPanel
     {
         public string SecretCode { get; set; } = "abcd";
 
-        public async Task SignIn()
+        public string ErrorMessage { get; private set; } = string.Empty;
+
+        public async Task<bool> SignIn()
         {
-            if (string.IsNullOrWhiteSpace(SecretCode))
+            ErrorMessage = string.Empty;
+
+            try
             {
-                return;
+                if (string.IsNullOrWhiteSpace(SecretCode))
+                {
+                    return false;
+                }
+                var result = await authenticationService.SignIn(SecretCode, persist: true);
+                if (!result.IsAuthenticated)
+                {
+                    SecretCode = string.Empty;
+                }
+                return result.IsAuthenticated;
             }
-            var result = await authenticationService.SignIn(SecretCode, persist:true);
-            if (!result.IsAuthenticated)
+            catch (Exception ex)
             {
-                SecretCode = string.Empty;
+                ErrorMessage = ex.Message;
+                return false;
             }
         }
 
