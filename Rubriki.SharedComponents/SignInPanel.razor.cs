@@ -6,7 +6,7 @@ public partial class SignInPanel
 {
     public class Model(ISecretCodeAuthenticationService authenticationService)
     {
-        public string SecretCode { get; set; } = "abcd";
+        public string SecretCode { get; set; } = "qwer";
 
         public string ErrorMessage { get; private set; } = string.Empty;
 

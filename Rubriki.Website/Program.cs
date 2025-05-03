@@ -72,7 +72,9 @@ public class Program
             app.UseHsts();
         }
 
+#if !DEBUG // Disable HTTPS redirection in debug mode otherwise emulator cannot connect to REST API
         app.UseHttpsRedirection();
+#endif
         app.UseRouting();
         app.UseAntiforgery();
         app.MapControllers();
