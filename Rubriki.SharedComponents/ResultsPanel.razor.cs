@@ -10,7 +10,7 @@ public partial class ResultsPanel
         public List<ContestantTotalScore> ResultsList { get; private set; } = [];
         public async Task Get()
         {
-            ResultsList = [.. (await scoreQuery.GetResults()).OrderByDescending(x => x.Score)];
+            ResultsList = [.. (await scoreQuery.GetContestantTotals()).OrderByDescending(x => x.Score)];
         }
     }
 }

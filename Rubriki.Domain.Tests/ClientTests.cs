@@ -49,7 +49,7 @@ namespace Rubriki.Domain.Tests
             var criterias = await setupQuery.GetCriteria(category.Id);
             await clientCommand.SetScore(contestant.Id, judge.Id, criterias[0].Id, 1, "");
             await clientCommand.SetScore(contestant.Id, judge.Id, criterias[1].Id, 2, "");
-            var results = await scoreQuery.GetResults();
+            var results = await scoreQuery.GetContestantTotals();
             var contestantResult = results.First();
 
             // Assert
@@ -95,10 +95,10 @@ namespace Rubriki.Domain.Tests
             var criterias = await setupQuery.GetCriteria(category.Id);
             await clientCommand.SetScore(contestant.Id, judge.Id, criterias[0].Id, 1, "");
             await clientCommand.SetScore(contestant.Id, judge.Id, criterias[1].Id, 2, "");
-            var firstResults = await scoreQuery.GetResults();
+            var firstResults = await scoreQuery.GetContestantTotals();
             var firstContestantResult = firstResults.First();
             await clientCommand.SetScore(contestant.Id, judge.Id, criterias[1].Id, 3, "");
-            var secondResults = await scoreQuery.GetResults();
+            var secondResults = await scoreQuery.GetContestantTotals();
             var secondContestantResult = secondResults.First();
 
             // Assert

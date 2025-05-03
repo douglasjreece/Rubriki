@@ -18,9 +18,7 @@
         <ErrorMessage Message="@model.ErrorMessage" TopMargin="3" />
     </Authorized>
     <NotAuthorized>
-        <div class="alert alert-warning">
-            <p>These functions require an Admin role.</p>
-        </div>
+        <AdminRequiredMessage />
     </NotAuthorized>
 </AuthorizeView>
 

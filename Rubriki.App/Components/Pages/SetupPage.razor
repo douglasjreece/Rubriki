@@ -8,9 +8,7 @@
         <button class="btn btn-primary" @onclick="ClickedEvent">Initialize App Data</button>
     </Authorized>
     <NotAuthorized>
-        <div class="alert alert-warning">
-            <p>You must be signed in with an Admin role to set up the application.</p>
-        </div>
+        <AdminRequiredMessage />
     </NotAuthorized>
 </AuthorizeView>
 

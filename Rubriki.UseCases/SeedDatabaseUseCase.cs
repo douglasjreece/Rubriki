@@ -5,7 +5,7 @@ namespace Rubriki.UseCases;
 
 public class SeedDatabaseUseCase(SetupCommand setupCommand, StorageQuery storageQuery, StorageCommand storageCommand)
 {
-    private const string seedDataFileName = "seedData.json";
+    private const string seedDataFileName = "seedData.json"; // TODO: put this in an options class
 
     public async Task Invoke(SeedData seedData)
     {

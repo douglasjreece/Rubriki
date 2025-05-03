@@ -41,7 +41,7 @@ public class ScoreQuery(Repository.ApplicationDbContext db) : CqrsQuery
             .ToListAsync();
     }
 
-    public async Task<List<ContestantTotalScore>> GetResults()
+    public async Task<List<ContestantTotalScore>> GetContestantTotals()
     {
         return await db.Scores
             .Include(x => x.Contestant)
