@@ -7,7 +7,15 @@
 
 <AuthorizeView Roles="Admin">
     <Authorized >
-        <button class="btn btn-primary" @onclick="ResetDataClicked">Reset Database</button>
+        <div class="mb-4">
+            <button class="btn btn-primary" @onclick="ClearScoresClicked">Clear Scores</button>
+        </div>
+        <label>Seed Data</label>
+        <InputTextArea @bind-Value="model.SeedDataJson" class="form-control" rows="20" />
+        <button class="btn btn-primary mt-3" @onclick="InitializeDatabaseClicked">Initialize Database</button>
+        <ActivityIndicator Visible="@model.IsWorking" />
+        <SuccessMessage Message="@model.SuccessMessage" TopMargin="3" />
+        <ErrorMessage Message="@model.ErrorMessage" TopMargin="3" />
     </Authorized>
     <NotAuthorized>
         <div class="alert alert-warning">
@@ -16,14 +24,20 @@
     </NotAuthorized>
 </AuthorizeView>
 
-<ActivityIndicator Visible="@model.IsWorking" />
-<SuccessMessage Message="@model.SuccessMessage" />
-<ErrorMessage Message="@model.ErrorMessage" />
 
 @code {
-
-    async Task ResetDataClicked()
+    protected override async Task OnInitializedAsync()
     {
-        await model.ResetData();
+        await model.Load();
+    }
+
+    async Task ClearScoresClicked()
+    {
+        await model.ClearScores();
+    }
+
+    async Task InitializeDatabaseClicked()
+    {
+        await model.InitializeDatabase();
     }
 }

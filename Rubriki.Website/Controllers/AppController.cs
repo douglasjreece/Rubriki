@@ -2,6 +2,8 @@
 using Rubriki.Dto;
 using Rubriki.Authentication;
 using Rubriki.Api;
+using Rubriki.UseCases;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Rubriki.Website.Controllers;
 
@@ -39,7 +41,8 @@ public class AppController(IServiceProvider provider, ISecretCodeAuthenticationS
             return Unauthorized("Only admins can access seed data");
         }
 
-        var seedData = provider.GetService<SeedData>();
+        var useCase = provider.GetRequiredService<SeedDatabaseUseCase>();
+        var seedData = await useCase.GetCurrentSeedData() ?? throw new InvalidOperationException("Seed data not found.");
         return Ok(seedData);
     }
 

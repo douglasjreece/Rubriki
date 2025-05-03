@@ -1,0 +1,26 @@
+{
+  "ContestantNames": [
+    "Astro Bots",
+    "Bot Heads",
+    "Code Commets",
+    "Galactic Gearheads",
+    "Hydro Hackers",
+    "Mech Masters",
+    "Null Terminators",
+    "Robo Rangers",
+    "Salty Circuits",
+    "Wattage Warriors"
+  ],
+  "JudgeNames": [
+    "Alice Anderson",
+    "Brian Bennett",
+    "Catherine Carter",
+    "Daniel Davis"
+  ],
+  "CategoryAndCriteria": {
+    "Robot Design": [ "Mechanical", "Programming", "Innovation" ],
+    "Project": [ "Research", "Solution", "Presentation" ],
+    "Core Values": [ "Inspiration", "Teamwork", "Professionalism" ]
+  },
+  "Levels": [ "Beginner", "Developing", "Accomplished", "Exemplary" ]
+}

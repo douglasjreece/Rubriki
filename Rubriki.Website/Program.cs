@@ -6,6 +6,7 @@ using Rubriki.UseCases;
 using Rubriki.Authentication;
 using Rubriki.Website.Components;
 using Rubriki.Website.CookieCqrs;
+using System.Text.Json;
 
 namespace Rubriki.Website;
 
@@ -47,8 +48,6 @@ public class Program
         services.AddSharedComponents();
         services.AddWebsiteModels();
 
-        services.AddSingleton(seedData);
-
         services.AddAuthentication();
         services.AddCascadingAuthenticationState();
 
@@ -79,12 +78,9 @@ public class Program
         app.UseAntiforgery();
         app.MapControllers();
 
-        //app.UseAuthorization();
-
         app.MapStaticAssets();
         app.MapRazorComponents<App>()
             .AddInteractiveServerRenderMode();
-
 
         {
             var serviceProvider = app.Services;
