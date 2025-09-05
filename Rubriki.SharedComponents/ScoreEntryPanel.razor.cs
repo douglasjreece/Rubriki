@@ -1,12 +1,12 @@
-﻿using Rubriki.Cqrs;
-using Rubriki.Dto;
+﻿using Rubriki.Dto;
+using Rubriki.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace Rubriki.SharedComponents;
 
 public partial class ScoreEntryPanel
 {
-    public class Model(SetupQuery setupQuery, ScoreQuery scoreQuery, ScoreCommand command) : IValidatableObject
+    public class Model(ISetupQuery setupQuery, IScoreQuery scoreQuery, IScoreCommand command) : IValidatableObject
     {
         public List<Judge> Judges { get; set; } = [];
         

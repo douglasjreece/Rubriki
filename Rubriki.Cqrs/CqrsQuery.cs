@@ -1,6 +1,4 @@
-﻿using Rubriki.Dto;
-
-namespace Rubriki.Cqrs;
+﻿namespace Rubriki.Cqrs;
 
 public class CqrsQuery
 {

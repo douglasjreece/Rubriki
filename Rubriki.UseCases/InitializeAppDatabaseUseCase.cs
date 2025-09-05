@@ -1,8 +1,8 @@
-﻿using Rubriki.Cqrs;
+﻿using Rubriki.Interfaces;
 
 namespace Rubriki.UseCases;
 
-public class InitializeAppDatabaseUseCase(ApiQuery query, SetupCommand command)
+public class InitializeAppDatabaseUseCase(IApiQuery query, ISetupCommand command)
 {
     public async Task Invoke()
     {

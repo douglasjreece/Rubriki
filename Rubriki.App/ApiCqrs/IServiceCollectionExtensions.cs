@@ -1,4 +1,6 @@
-﻿namespace Rubriki.App.ApiCqrs;
+﻿using Rubriki.Interfaces;
+
+namespace Rubriki.App.ApiCqrs;
 
 public static class IServiceCollectionExtensions
 {
@@ -7,8 +9,8 @@ public static class IServiceCollectionExtensions
         var options = new ApiOptions();
         getOptions(options);
         services.AddSingleton(options);
-        services.AddTransient<Cqrs.ApiCommand, ApiCommand>();
-        services.AddTransient<Cqrs.ApiQuery, ApiQuery>();
+        services.AddTransient<IApiCommand, ApiCommand>();
+        services.AddTransient<IApiQuery, ApiQuery>();
         return services;
     }
 }

@@ -1,8 +1,6 @@
-﻿using Rubriki.Dto;
+﻿namespace Rubriki.Cqrs;
 
-namespace Rubriki.Cqrs;
-
-public abstract class ApiQuery : CqrsQuery
+public abstract class ApiQuery : CqrsQuery, IApiQuery
 {
     public abstract Task<SeedData> GetSeedData();
 }

@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Rubriki.Dto;
 
 namespace Rubriki.Cqrs;
 
-public class ScoreQuery(Repository.ApplicationDbContext db) : CqrsQuery
+public class ScoreQuery(Repository.ApplicationDbContext db) : CqrsQuery, IScoreQuery
 {
     public async Task<List<CriteriaScore>> GetContestantCategoryScores(int contestantId, int categoryId)
     {

@@ -2,7 +2,7 @@
 
 namespace Rubriki.Cqrs;
 
-public class StorageCommand(StorageOptions options)
+public class StorageCommand(StorageOptions options) : IStorageCommand
 {
     public async Task Store<T>(string fileName, T content) where T : class
     {

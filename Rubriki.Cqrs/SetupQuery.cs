@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Rubriki.Dto;
 
 namespace Rubriki.Cqrs;
 
-public class SetupQuery(Repository.ApplicationDbContext db) : CqrsQuery
+public class SetupQuery(Repository.ApplicationDbContext db) : CqrsQuery, ISetupQuery
 {
     public async Task<List<Contestant>> GetContestants()
     {

@@ -2,7 +2,7 @@
 
 namespace Rubriki.Cqrs;
 
-public class ScoreCommand(Repository.ApplicationDbContext db)
+public class ScoreCommand(Repository.ApplicationDbContext db) : IScoreCommand
 {
     public async Task SetScore(int contestantId, int judgeId, int criteriaId, int levelId, string comment)
     {

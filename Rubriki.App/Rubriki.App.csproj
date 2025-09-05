@@ -70,6 +70,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Rubriki.Api\Rubriki.Api.csproj" />
       <ProjectReference Include="..\Rubriki.Dto\Rubriki.Dto.csproj" />
+      <ProjectReference Include="..\Rubriki.Interfaces\Rubriki.Interfaces.csproj" />
       <ProjectReference Include="..\Rubriki.Repository\Rubriki.Repository.csproj" />
       <ProjectReference Include="..\Rubriki.SharedComponents\Rubriki.SharedComponents.csproj" />
       <ProjectReference Include="..\Rubriki.UseCases\Rubriki.UseCases.csproj" />

@@ -1,12 +1,12 @@
 ﻿using Rubriki.Api;
 using Rubriki.Authentication;
-using Rubriki.Cqrs;
+using Rubriki.Interfaces;
 using System.Net.Http.Json;
 using System.Security.Authentication;
 
 namespace Rubriki.App.Authentication;
 
-public class AppAuthenticationService(StorageQuery storageQuery, StorageCommand storageCommand, AppAuthenticationService.Options options) : ISecretCodeAuthenticationService
+public class AppAuthenticationService(IStorageQuery storageQuery, IStorageCommand storageCommand, AppAuthenticationService.Options options) : ISecretCodeAuthenticationService
 {
     public class Options
     {

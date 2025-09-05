@@ -1,11 +1,11 @@
-﻿using Rubriki.Cqrs;
-using Rubriki.Dto;
+﻿using Rubriki.Dto;
+using Rubriki.Interfaces;
 
 namespace Rubriki.SharedComponents;
 
 public partial class ResultsPanel
 {
-    public class Model(ScoreQuery scoreQuery)
+    public class Model(IScoreQuery scoreQuery)
     {
         public List<ContestantTotalScore> ResultsList { get; private set; } = [];
         public async Task Get()

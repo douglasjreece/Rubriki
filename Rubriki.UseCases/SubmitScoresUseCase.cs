@@ -1,8 +1,8 @@
-﻿using Rubriki.Cqrs;
+﻿using Rubriki.Interfaces;
 
 namespace Rubriki.UseCases;
 
-public class SubmitScoresUseCase(ScoreQuery scoreQuery, ScoreCommand scoreCommand, ApiCommand apiCommand)
+public class SubmitScoresUseCase(IScoreQuery scoreQuery, IScoreCommand scoreCommand, IApiCommand apiCommand)
 {
     public async Task Invoke()
     {
