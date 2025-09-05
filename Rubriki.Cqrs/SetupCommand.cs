@@ -12,31 +12,31 @@ public class SetupCommand(ApplicationDbContext db) : ISetupCommand
 
     public async Task Seed(SeedData seedData)
     {
-        var categories = new List<Repository.Category>();
-        var criteria = new List<Repository.Criteria>();
-        var contestants = new List<Repository.Contestant>();
-        var judges = new List<Repository.Judge>();
-        var levels = new List<Repository.Level>();
+        var categories = new List<Entities.Category>();
+        var criteria = new List<Entities.Criteria>();
+        var contestants = new List<Entities.Contestant>();
+        var judges = new List<Entities.Judge>();
+        var levels = new List<Entities.Level>();
         foreach (var (categoryName, criteriaNames) in seedData.CategoryAndCriteria)
         {
-            var category = new Repository.Category { Id = categories.Count + 1, Name = categoryName };
+            var category = new Entities.Category { Id = categories.Count + 1, Name = categoryName };
             categories.Add(category);
             foreach (var criteriaName in criteriaNames)
             {
-                criteria.Add(new Repository.Criteria { Id = criteria.Count + 1, Name = criteriaName, Category = category });
+                criteria.Add(new Entities.Criteria { Id = criteria.Count + 1, Name = criteriaName, Category = category });
             }
         }
         foreach (var contestantName in seedData.ContestantNames)
         {
-            contestants.Add(new Repository.Contestant { Id = contestants.Count + 1, Name = contestantName });
+            contestants.Add(new Entities.Contestant { Id = contestants.Count + 1, Name = contestantName });
         }
         foreach (var judgeName in seedData.JudgeNames)
         {
-            judges.Add(new Repository.Judge { Id = judges.Count + 1, Name = judgeName });
+            judges.Add(new Entities.Judge { Id = judges.Count + 1, Name = judgeName });
         }
         for (var i = 0; i < seedData.Levels.Count; i++)
         {
-            levels.Add(new Repository.Level { Id = levels.Count + 1, Description = seedData.Levels[i], Score = i + 1 });
+            levels.Add(new Entities.Level { Id = levels.Count + 1, Description = seedData.Levels[i], Score = i + 1 });
         }
         await db.Categories.AddRangeAsync(categories);
         await db.Criteria.AddRangeAsync(criteria);

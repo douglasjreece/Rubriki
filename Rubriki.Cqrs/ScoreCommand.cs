@@ -21,7 +21,7 @@ public class ScoreCommand(Repository.ApplicationDbContext db) : IScoreCommand
         else
         {
             // Create new score
-            var newScore = new Repository.Score 
+            var newScore = new Score 
             { 
                 Contestant = contestant, 
                 Judge = judge, 

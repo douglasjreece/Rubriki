@@ -2,28 +2,28 @@
 
 public class CqrsQuery
 {
-    protected static Contestant ToDto(Repository.Contestant contestant)
+    protected static Dto.Contestant ToDto(Entities.Contestant contestant)
     {
-        return new Contestant(contestant.Id, contestant.Name);
+        return new Dto.Contestant(contestant.Id, contestant.Name);
     }
 
-    protected static Judge ToDto(Repository.Judge judge)
+    protected static Dto.Judge ToDto(Entities.Judge judge)
     {
-        return new Judge(judge.Id, judge.Name);
+        return new Dto.Judge(judge.Id, judge.Name);
     }
 
-    protected static Category ToDto(Repository.Category category)
+    protected static Dto.Category ToDto(Entities.Category category)
     {
-        return new Category(category.Id, category.Name);
+        return new Dto.Category(category.Id, category.Name);
     }
 
-    protected static Criteria ToDto(Repository.Criteria criteria)
+    protected static Dto.Criteria ToDto(Entities.Criteria criteria)
     {
-        return new Criteria(new Category(criteria.Category.Id, criteria.Category.Name), criteria.Id, criteria.Name);
+        return new Dto.Criteria(new Dto.Category(criteria.Category.Id, criteria.Category.Name), criteria.Id, criteria.Name);
     }
 
-    protected static Level ToDto(Repository.Level level)
+    protected static Dto.Level ToDto(Entities.Level level)
     {
-        return new Level(level.Id, level.Description, level.Score);
+        return new Dto.Level(level.Id, level.Description, level.Score);
     }
 }

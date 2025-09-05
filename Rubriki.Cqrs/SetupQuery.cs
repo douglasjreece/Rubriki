@@ -4,22 +4,22 @@ namespace Rubriki.Cqrs;
 
 public class SetupQuery(Repository.ApplicationDbContext db) : CqrsQuery, ISetupQuery
 {
-    public async Task<List<Contestant>> GetContestants()
+    public async Task<List<Dto.Contestant>> GetContestants()
     {
         return await db.Contestants.Select(x => ToDto(x)).ToListAsync();
     }
 
-    public async Task<List<Judge>> GetJudges()
+    public async Task<List<Dto.Judge>> GetJudges()
     {
         return await db.Judges.Select(x => ToDto(x)).ToListAsync();
     }
 
-    public async Task<List<Category>> GetCategories()
+    public async Task<List<Dto.Category>> GetCategories()
     {
         return await db.Categories.Select(x => ToDto(x)).ToListAsync();
     }
 
-    public async Task<List<Criteria>> GetCriteria()
+    public async Task<List<Dto.Criteria>> GetCriteria()
     {
         return await db.Criteria
             .Include(x => x.Category)
@@ -27,7 +27,7 @@ public class SetupQuery(Repository.ApplicationDbContext db) : CqrsQuery, ISetupQ
             .ToListAsync();
     }
 
-    public async Task<List<Criteria>> GetCriteria(int categoryId)
+    public async Task<List<Dto.Criteria>> GetCriteria(int categoryId)
     {
         return await db.Criteria
             .Include(x => x.Category)
@@ -36,14 +36,14 @@ public class SetupQuery(Repository.ApplicationDbContext db) : CqrsQuery, ISetupQ
             .ToListAsync();
     }
 
-    public async Task<List<Level>> GetLevels()
+    public async Task<List<Dto.Level>> GetLevels()
     {
         return await db.Levels
             .Select(x => ToDto(x))
             .ToListAsync();
     }
 
-    public async Task<Contestant> GetContestant(int contestantId)
+    public async Task<Dto.Contestant> GetContestant(int contestantId)
     {
         return await db.Contestants
             .Where(x => x.Id == contestantId)

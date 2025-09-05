@@ -1,17 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Rubriki.Repository;
+namespace Rubriki.Entities;
 
-public class Level
+public class Contestant
 {
     public int Id { get; set; }
 
     [Required]
     [MaxLength(100)]
-    public string Description { get; set; } = string.Empty;
-
-    [Required]
-    public int Score { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     // Navigation property
     public ICollection<Score>? Results { get; set; }
