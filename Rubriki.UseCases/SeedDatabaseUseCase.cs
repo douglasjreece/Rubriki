@@ -1,9 +1,9 @@
-﻿using Rubriki.Cqrs;
-using Rubriki.Dto;
+﻿using Rubriki.Dto;
+using Rubriki.Interfaces;
 
 namespace Rubriki.UseCases;
 
-public class SeedDatabaseUseCase(SetupCommand setupCommand, StorageQuery storageQuery, StorageCommand storageCommand)
+public class SeedDatabaseUseCase(ISetupCommand setupCommand, IStorageQuery storageQuery, IStorageCommand storageCommand)
 {
     private const string seedDataFileName = "seedData.json"; // TODO: put this in an options class
 

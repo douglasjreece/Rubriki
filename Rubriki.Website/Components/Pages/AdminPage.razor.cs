@@ -1,5 +1,5 @@
-﻿using Rubriki.Cqrs;
-using Rubriki.Dto;
+﻿using Rubriki.Dto;
+using Rubriki.Interfaces;
 using Rubriki.UseCases;
 using System.Text.Json;
 
@@ -7,7 +7,7 @@ namespace Rubriki.Website.Components.Pages
 {
     public partial class AdminPage
     {
-        public class Model(SeedDatabaseUseCase seedDataUseCase, ScoreCommand scoreCommand)
+        public class Model(SeedDatabaseUseCase seedDataUseCase, IScoreCommand scoreCommand)
         {
             public string SeedDataJson { get; set; } = string.Empty;
 

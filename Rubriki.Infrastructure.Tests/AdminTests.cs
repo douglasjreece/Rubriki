@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Rubriki.Domain.Tests
+namespace Rubriki.Infrastructure.Tests
 {
     [TestClass]
     public sealed class AdminTests

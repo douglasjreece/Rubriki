@@ -2,9 +2,9 @@
 
 namespace Rubriki.Cqrs;
 
-public class StorageQuery(StorageOptions options)
+public class StorageQuery(StorageOptions options) : IStorageQuery
 {
-    public async Task<T?> GetOrDefault<T>(string fileName) where T: class
+    public async Task<T?> GetOrDefault<T>(string fileName) where T : class
     {
         try
         {

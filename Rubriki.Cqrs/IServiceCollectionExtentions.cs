@@ -10,12 +10,12 @@ public static class IServiceCollectionExtentions
         getOptions(options);
         services.AddSingleton(options);
         services.AddSingleton(options.StorageOptions);
-        services.AddScoped<StorageCommand>();
-        services.AddScoped<StorageQuery>();
-        services.AddScoped<SetupCommand>();
-        services.AddScoped<SetupQuery>();
-        services.AddScoped<ScoreCommand>();
-        services.AddScoped<ScoreQuery>();
+        services.AddScoped<IStorageCommand, StorageCommand>();
+        services.AddScoped<IStorageQuery, StorageQuery>();
+        services.AddScoped<ISetupCommand, SetupCommand>();
+        services.AddScoped<ISetupQuery, SetupQuery>();
+        services.AddScoped<IScoreCommand, ScoreCommand>();
+        services.AddScoped<IScoreQuery, ScoreQuery>();
         return services;
     }
 }

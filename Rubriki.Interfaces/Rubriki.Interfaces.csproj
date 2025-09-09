@@ -8,9 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Rubriki.Dto\Rubriki.Dto.csproj" />
-    <ProjectReference Include="..\Rubriki.Entities\Rubriki.Entities.csproj" />
-    <ProjectReference Include="..\Rubriki.Interfaces\Rubriki.Interfaces.csproj" />
-    <ProjectReference Include="..\Rubriki.Repository\Rubriki.Repository.csproj" />
   </ItemGroup>
 
 </Project>

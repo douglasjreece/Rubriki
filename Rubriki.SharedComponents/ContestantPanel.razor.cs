@@ -1,11 +1,11 @@
-﻿using Rubriki.Cqrs;
-using Rubriki.Dto;
+﻿using Rubriki.Dto;
+using Rubriki.Interfaces;
 
 namespace Rubriki.SharedComponents;
 
 public partial class ContestantPanel
 {
-    public class Model(SetupQuery setupQuery, ScoreQuery scoreQuery)
+    public class Model(ISetupQuery setupQuery, IScoreQuery scoreQuery)
     {
         public Contestant? Contestant { get; private set; }
         public List<CriteriaScore> CriteriaScores { get; private set; } = [];

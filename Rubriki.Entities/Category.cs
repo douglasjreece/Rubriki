@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Rubriki.Repository;
+namespace Rubriki.Entities;
 
 public class Category
 {

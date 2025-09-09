@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
+using Rubriki.Entities;
 
 namespace Rubriki.Repository;
 

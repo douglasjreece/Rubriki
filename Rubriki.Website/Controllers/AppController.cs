@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Rubriki.Dto;
 using Rubriki.Authentication;
 using Rubriki.Api;
+using Rubriki.Dto;
+using Rubriki.Interfaces;
 using Rubriki.UseCases;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Rubriki.Website.Controllers;
 
@@ -62,7 +62,7 @@ public class AppController(IServiceProvider provider, ISecretCodeAuthenticationS
         {
             return BadRequest("Score data is required");
         }
-        var command = provider.GetRequiredService<Cqrs.ScoreCommand>();
+        var command = provider.GetRequiredService<IScoreCommand>();
         await command.SetScore(contestantId, submission.JudgeId, submission.CriteriaId, submission.LevelId, submission.Comment);
         return Ok();
     }
