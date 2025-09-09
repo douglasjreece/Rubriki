@@ -105,7 +105,7 @@ public partial class ScoreEntryPanel
         {
             if (int.TryParse(selectedContestantId, out var contestantId) && int.TryParse(selectedCategoryId, out var categoryId))
             {
-                currentScores = await scoreQuery.GetContestantCategoryScores(contestantId, categoryId);
+                currentScores = await scoreQuery.GetContestantCriteriaScores(contestantId, categoryId);
             }
             else
             {

@@ -9,7 +9,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var result in model.ResultsList)
+            @foreach (var result in model.TotalsList)
             {
                 <tr>
                     <td><a href="/contestant/@result.Contestant.Id">@result.Contestant.Name</a></td>
@@ -18,6 +18,30 @@
             }
         </tbody>
     </table>
+</div>
+
+<div class="col-3">
+    @foreach (var item in model.ByCategory)
+    {
+        <p>@item.Category.Name</p>
+        <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Contestant</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in item.Scores)
+            {
+                <tr>
+                    <td><a href="/contestant/@result.Contestant.Id">@result.Contestant.Name</a></td>
+                    <td>@result.Score</td>
+                </tr>
+            }
+        </tbody>
+        </table>
+    }
 </div>
 
 @code {

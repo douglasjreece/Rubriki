@@ -4,7 +4,7 @@ namespace Rubriki.Cqrs;
 
 public class ScoreQuery(Repository.ApplicationDbContext db) : IScoreQuery
 {
-    public async Task<List<CriteriaScore>> GetContestantCategoryScores(int contestantId, int categoryId)
+    public async Task<List<CriteriaScore>> GetContestantCriteriaScores(int contestantId, int categoryId)
     {
         return await db.Scores
             .Include(x => x.Criteria)
@@ -16,7 +16,7 @@ public class ScoreQuery(Repository.ApplicationDbContext db) : IScoreQuery
             .ToListAsync();
     }
 
-    public async Task<List<CriteriaScore>> GetContestantCategoryScores(int contestantId)
+    public async Task<List<CriteriaScore>> GetContestantCriteriaScores(int contestantId)
     {
         return await db.Scores
             .Include(x => x.Criteria)
@@ -31,6 +31,21 @@ public class ScoreQuery(Repository.ApplicationDbContext db) : IScoreQuery
                     Map.ToDto(x.Level),
                     x.Comment)
                 )
+            .ToListAsync();
+    }
+
+    public async Task<List<ContestantTotalScore>> GetContestantTotalsForCategory(int categoryId)
+    {
+        return await db.Scores
+            .Include(x => x.Contestant)
+            .Include(x => x.Level)
+            .Include(x => x.Criteria)
+            .Where(x => x.Criteria!.Category!.Id == categoryId)
+            .GroupBy(x => x.Contestant)
+            .Select(g => new ContestantTotalScore(
+                Map.ToDto(g.Key),
+                g.Sum(s => s.Level!.Score)
+            ))
             .ToListAsync();
     }
 

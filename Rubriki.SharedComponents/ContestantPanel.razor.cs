@@ -15,7 +15,7 @@ public partial class ContestantPanel
             Contestant = await setupQuery.GetContestant(contestantId);
             CriteriaScores =
             [
-                .. (await scoreQuery.GetContestantCategoryScores(contestantId))
+                .. (await scoreQuery.GetContestantCriteriaScores(contestantId))
                     .OrderBy(x => x.Criteria.Category.Id)
                     .ThenBy(x => x.Criteria.Id)
             ];
