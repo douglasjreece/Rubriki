@@ -2,7 +2,7 @@
 
 namespace Rubriki.Cqrs;
 
-public class ScoreQuery(Repository.ApplicationDbContext db) : CqrsQuery, IScoreQuery
+public class ScoreQuery(Repository.ApplicationDbContext db) : IScoreQuery
 {
     public async Task<List<CriteriaScore>> GetContestantCategoryScores(int contestantId, int categoryId)
     {
@@ -12,13 +12,7 @@ public class ScoreQuery(Repository.ApplicationDbContext db) : CqrsQuery, IScoreQ
             .Include(x => x.Level)
             .Include(x => x.Criteria!.Category)
             .Where(x => x.Contestant!.Id == contestantId && x.Criteria!.Category!.Id == categoryId)
-            .Select(x => 
-                new CriteriaScore(
-                    ToDto(x.Criteria),
-                    ToDto(x.Judge),
-                    ToDto(x.Level),
-                    x.Comment)
-                )
+            .Select(x => new CriteriaScore(Map.ToDto(x.Criteria), Map.ToDto(x.Judge), Map.ToDto(x.Level), x.Comment))
             .ToListAsync();
     }
 
@@ -32,9 +26,9 @@ public class ScoreQuery(Repository.ApplicationDbContext db) : CqrsQuery, IScoreQ
             .Where(x => x.Contestant!.Id == contestantId)
             .Select(x => 
                 new CriteriaScore(
-                    ToDto(x.Criteria),
-                    ToDto(x.Judge),
-                    ToDto(x.Level),
+                    Map.ToDto(x.Criteria),
+                    Map.ToDto(x.Judge),
+                    Map.ToDto(x.Level),
                     x.Comment)
                 )
             .ToListAsync();
@@ -46,7 +40,7 @@ public class ScoreQuery(Repository.ApplicationDbContext db) : CqrsQuery, IScoreQ
             .Include(x => x.Contestant)
             .Include(x => x.Level)
             .GroupBy(x => x.Contestant)
-            .Select(x => new ContestantTotalScore(ToDto(x.Key), x.Sum(y => y.Level!.Score)))
+            .Select(x => new ContestantTotalScore(Map.ToDto(x.Key), x.Sum(y => y.Level!.Score)))
             .ToListAsync();
     }
 
@@ -60,10 +54,10 @@ public class ScoreQuery(Repository.ApplicationDbContext db) : CqrsQuery, IScoreQ
             .ThenInclude(x => x.Category)
             .Select(x =>
                 new ScoreEntry(
-                    ToDto(x.Contestant),
-                    ToDto(x.Judge),
-                    ToDto(x.Criteria),
-                    ToDto(x.Level),
+                    Map.ToDto(x.Contestant),
+                    Map.ToDto(x.Judge),
+                    Map.ToDto(x.Criteria),
+                    Map.ToDto(x.Level),
                     x.Comment)
                 )
             .ToListAsync();
